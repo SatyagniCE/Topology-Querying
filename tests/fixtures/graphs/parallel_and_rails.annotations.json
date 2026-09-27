@@ -1,0 +1,11 @@
+{
+  "net_roles": [
+    ["feedback", "bias"],
+    ["sense", "output"]
+  ],
+  "rail_aliases": [
+    ["0", "gnd"],
+    ["GND", "gnd"],
+    ["VDD", "vdd"]
+  ]
+}

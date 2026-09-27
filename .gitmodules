@@ -1,0 +1,3 @@
+[submodule "AnalogGenie"]
+	path = AnalogGenie
+	url = https://github.com/xz-group/AnalogGenie.git

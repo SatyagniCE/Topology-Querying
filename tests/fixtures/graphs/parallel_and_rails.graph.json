@@ -1,0 +1,115 @@
+{
+  "converter_version": "gnn-pruning-device-graph/1.0.0",
+  "edges": [
+    {
+      "dst": "L1",
+      "dst_terminal": "negative",
+      "net": "sense",
+      "net_role": "output",
+      "parallel_index": 0,
+      "src": "Cfb",
+      "src_terminal": "negative"
+    },
+    {
+      "dst": "M1",
+      "dst_terminal": "drain",
+      "net": "feedback",
+      "net_role": "bias",
+      "parallel_index": 0,
+      "src": "Cfb",
+      "src_terminal": "positive"
+    },
+    {
+      "dst": "Cfb",
+      "dst_terminal": "negative",
+      "net": "sense",
+      "net_role": "output",
+      "parallel_index": 0,
+      "src": "L1",
+      "src_terminal": "negative"
+    },
+    {
+      "dst": "Cfb",
+      "dst_terminal": "positive",
+      "net": "feedback",
+      "net_role": "bias",
+      "parallel_index": 0,
+      "src": "M1",
+      "src_terminal": "drain"
+    }
+  ],
+  "graph_schema_version": 1,
+  "nodes": [
+    {
+      "fixed_attributes": [],
+      "id": "Cfb",
+      "interface_flags": [
+        "bias",
+        "output"
+      ],
+      "kind": "capacitor",
+      "terminal_equivalence": [],
+      "terminal_roles": [
+        "positive",
+        "negative"
+      ],
+      "tunable_kinds": [
+        "capacitance"
+      ]
+    },
+    {
+      "fixed_attributes": [
+        [
+          "l",
+          1e-09
+        ]
+      ],
+      "id": "L1",
+      "interface_flags": [
+        "output",
+        "vdd"
+      ],
+      "kind": "inductor",
+      "terminal_equivalence": [],
+      "terminal_roles": [
+        "positive",
+        "negative"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [
+        [
+          "l",
+          4.5000000000000006e-08
+        ]
+      ],
+      "id": "M1",
+      "interface_flags": [
+        "bias",
+        "gnd"
+      ],
+      "kind": "nmos",
+      "terminal_equivalence": [
+        [
+          "drain",
+          "gate"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": [
+        "mos_width"
+      ]
+    }
+  ],
+  "rail_nets": [
+    "0",
+    "GND",
+    "VDD"
+  ]
+}
