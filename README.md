@@ -102,3 +102,15 @@ MATCH (c:Circuit)-[:HAS_PORT]->(p:Port {referenced_by_device: false})
 RETURN c.id AS circuit_id, p.name AS port, n.name AS net
 LIMIT 25;
 ```
+
+After loading the full corpus, compare the database with the current parser
+audit report:
+
+```bash
+circuit-neo4j audit --report analoggenie-audit-report.json
+```
+
+The audit reads expected totals and device-type counts from that report at run
+time. It also checks terminal and port relationship integrity and the circuit
+755/Q30 substrate connection to net `0`. A nonzero exit means a mismatch or a
+connection/report error; the command prints each mismatch to stderr.

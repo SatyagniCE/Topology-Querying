@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import json
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,9 @@ from circuit_ingest.models import (
 )
 from circuit_ingest.neo4j_store import create_constraints, replace_circuit
 from circuit_ingest.neo4j_cli import run
+from circuit_ingest.neo4j_audit import audit_database
+from circuit_ingest.loader import discover
+from circuit_ingest.parser import AnalogGenieParser
 
 
 def _record(circuit_id: str) -> CircuitRecord:
@@ -229,3 +233,43 @@ def test_import_cli_reports_unreachable_database(tmp_path, monkeypatch, capsys):
 
     assert run(["import", "--input-dir", str(tmp_path)]) != 0
     assert "connect" in capsys.readouterr().err.lower()
+
+
+def test_audit_spot_checks_circuit_755_q30_substrate(database, tmp_path, monkeypatch):
+    driver, db, _ = database
+    dataset = Path(__file__).parents[2] / "AnalogGenie" / "Dataset"
+    source = next(bundle for bundle in discover(dataset) if bundle.circuit_id == "755")
+    result = AnalogGenieParser().parse(source)
+    assert result.circuit is not None
+    record = result.circuit
+    replace_circuit(driver, db, record)
+    report = tmp_path / "audit-report.json"
+    report_data = {
+        "status_counts": {"valid": 1, "valid_with_warnings": 0},
+        "totals": {"devices": record.statistics.device_count,
+                   "nets": record.statistics.net_count,
+                   "ports": record.statistics.external_port_count,
+                   "connections": record.statistics.connection_count},
+        "canonical_device_type_counts": record.statistics.device_type_counts,
+    }
+    report.write_text(json.dumps(report_data), encoding="utf-8")
+    try:
+        assert audit_database(driver, db, report) == []
+        settings = _settings()
+        for name in ("NEO4J_URI", "NEO4J_USER", "NEO4J_PASSWORD", "NEO4J_DATABASE"):
+            monkeypatch.setenv(name, settings[name])
+        assert run(["audit", "--report", str(report)]) == 0
+        report_data["totals"]["devices"] += 1
+        report.write_text(json.dumps(report_data), encoding="utf-8")
+        assert run(["audit", "--report", str(report)]) == 1
+        row = _one(driver, db, """
+            MATCH (c:Circuit {id:'analoggenie:755'})-[:HAS_DEVICE]->
+                  (d:Device {source_instance:'Q30'})-
+                  [r:CONNECTED_TO {terminal:'substrate'}]->(n:Net {name:'0'})
+            RETURN count(r) AS n, collect(r.terminal_ordinal) AS ordinals
+        """)
+        assert dict(row) == {"n": 1, "ordinals": [3]}
+    finally:
+        with driver.session(database=db) as session:
+            session.run("MATCH (c:Circuit {id:'analoggenie:755'})-[:HAS_DEVICE|HAS_NET|HAS_PORT]->(n) DETACH DELETE n").consume()
+            session.run("MATCH (c:Circuit {id:'analoggenie:755'}) DETACH DELETE c").consume()
