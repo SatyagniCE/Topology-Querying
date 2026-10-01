@@ -253,7 +253,8 @@ def test_audit_spot_checks_circuit_755_q30_substrate(database, tmp_path, monkeyp
         pytest.skip("set NEO4J_CORPUS_TEST=1 after loading the full corpus")
     driver, db, _ = database
     root = Path(__file__).parents[2]
-    report = root / "analoggenie-audit-report.json"
+    report = Path(os.environ.get(
+        "NEO4J_CORPUS_REPORT", root / "output/analoggenie/audit-report.json"))
     report_data = json.loads(report.read_text(encoding="utf-8"))
     assert audit_database(driver, db, report) == []
     settings = _settings()

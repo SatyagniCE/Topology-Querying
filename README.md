@@ -75,8 +75,9 @@ report the system Java 8. The status command and HTTP request must succeed.
 
 ## Store canonical circuits in Neo4j
 
-Install the optional Python driver, export the local connection settings,
-then import the parser's `circuits/*.json` files:
+Run the parser generation step above first. It creates both the circuit JSON
+files and their matching audit report in `output/analoggenie`. Then export the
+local connection settings and import the generated files:
 
 ```bash
 python -m pip install -e '.[neo4j,test]'
@@ -107,7 +108,8 @@ After loading the full corpus, compare the database with the current parser
 audit report:
 
 ```bash
-circuit-neo4j audit --report analoggenie-audit-report.json
+circuit-neo4j audit --report output/analoggenie/audit-report.json
+NEO4J_TEST_REQUIRED=1 NEO4J_CORPUS_TEST=1 python -m pytest -q
 ```
 
 The audit reads expected totals and device-type counts from that report at run
