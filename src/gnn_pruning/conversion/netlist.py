@@ -165,6 +165,52 @@ def parse_netlist(
     """
     if not isinstance(text, str):
         raise TypeError("text must be a string")
+    # Official flattened AnalogGenie topology files have a separate, lossless
+    # grammar. Route them through the ingestion adapter before generic SPICE
+    # subcircuit resolution or attribute parsing can reinterpret their lines.
+    source_path = Path(path)
+    if (
+        source_path.is_file()
+        and source_path.parent.name.isdecimal()
+        and source_path.parent.parent.name == "Dataset"
+        and source_path.name == f"{source_path.parent.name}.cir"
+        and (
+            source_path.with_name(f"Port{source_path.parent.name}.txt").is_file()
+            or source_path.parent.parent.parent.name == "AnalogGenie"
+        )
+    ):
+        from circuit_ingest import AnalogGenieParser, SourceBundle
+
+        if text != source_path.read_text(encoding="utf-8"):
+            raise ValueError("AnalogGenie source text differs from the path contents")
+        source = SourceBundle(
+            dataset_name="AnalogGenie", circuit_id=source_path.parent.name,
+            root_directory=source_path.parent.parent, primary_netlist_path=source_path,
+            port_path=source_path.with_name(f"Port{source_path.parent.name}.txt"),
+            auxiliary_paths=[],
+        )
+        result = AnalogGenieParser().parse(source)
+        if result.status not in {"valid", "valid_with_warnings"} or result.circuit is None:
+            detail = "; ".join(f"{issue.code}: {issue.message}" for issue in result.issues)
+            raise NetlistParseError(path, 0, "", detail)
+        net_names = {net.id: net.name for net in result.circuit.nets}
+        return ParsedNetlist(
+            instances=tuple(
+                ParsedInstance(
+                    instance_id=device.id, kind=device.raw_type,
+                    nets=tuple(net_names[connection.net_id] for connection in device.connections),
+                    terminal_roles=(
+                        DEVICE_TYPES[device.raw_type].terminal_roles
+                        if device.raw_type in DEVICE_TYPES
+                        else tuple(connection.terminal for connection in device.connections)
+                    ),
+                    attributes={}, expressions={}, line_number=device.source_line,
+                    source_text=device.raw_line, raw_instance_id=device.source_instance,
+                )
+                for device in result.circuit.devices
+            ),
+            source_sha256=result.circuit.source.primary_sha256,
+        )
     normalized_fixed = _normalize_fixed_values(fixed_values, path)
     definitions, top_level = _split_definitions(text, path)
     registry = _registry_for_path(path)
