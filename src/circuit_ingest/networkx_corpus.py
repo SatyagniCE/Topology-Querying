@@ -57,15 +57,24 @@ def build_corpus(input_dir: Path, output_dir: Path) -> dict[str, str]:
         records[record.circuit_id] = record
     manifest: dict[str, dict[str, str]] = {}
     for circuit_id in sorted(records):
-        graph = build_networkx_graph(records[circuit_id])
-        relative = _graph_path(circuit_id)
-        _atomic_bytes(output_dir / relative, pickle.dumps(graph, protocol=pickle.HIGHEST_PROTOCOL))
+        try:
+            graph = build_networkx_graph(records[circuit_id])
+            relative = _graph_path(circuit_id)
+            _atomic_bytes(output_dir / relative,
+                          pickle.dumps(graph, protocol=pickle.HIGHEST_PROTOCOL))
+        except OSError as exc:
+            raise OSError(f"{circuit_id}: cache write failed: {exc}") from exc
+        except Exception as exc:
+            raise RuntimeError(f"{circuit_id}: graph serialization failed: {exc}") from exc
         manifest[circuit_id] = {
             "path": relative,
             "record_sha256": sha256(graph.graph["record_json"].encode("utf-8")).hexdigest(),
         }
-    _atomic_bytes(output_dir / "manifest.json", (json.dumps(manifest, sort_keys=True,
-                         separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8"))
+    try:
+        _atomic_bytes(output_dir / "manifest.json", (json.dumps(manifest, sort_keys=True,
+                             separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8"))
+    except OSError as exc:
+        raise OSError(f"manifest publication failed: {exc}") from exc
     return {circuit_id: entry["path"] for circuit_id, entry in manifest.items()}
 
 

@@ -91,6 +91,40 @@ def test_manifest_rejects_unsafe_path(tmp_path):
         load_graph(cache, "test:one")
 
 
+
+def test_write_failure_names_circuit(tmp_path, monkeypatch):
+    import circuit_ingest.networkx_corpus as corpus
+    source = tmp_path / "source"
+    _write(source, "test:one")
+    original = corpus._atomic_bytes
+
+    def failing_write(path, data):
+        if path.suffix == ".pkl":
+            raise OSError("simulated disk failure")
+        return original(path, data)
+
+    monkeypatch.setattr(corpus, "_atomic_bytes", failing_write)
+    with pytest.raises(OSError, match="test:one"):
+        build_corpus(source, tmp_path / "cache")
+
+
+
+def test_manifest_write_failure_is_identified(tmp_path, monkeypatch):
+    import circuit_ingest.networkx_corpus as corpus
+    source = tmp_path / "source"
+    _write(source, "test:one")
+    original = corpus._atomic_bytes
+
+    def failing_write(path, data):
+        if path.name == "manifest.json":
+            raise OSError("simulated disk failure")
+        return original(path, data)
+
+    monkeypatch.setattr(corpus, "_atomic_bytes", failing_write)
+    with pytest.raises(OSError, match="manifest publication failed"):
+        build_corpus(source, tmp_path / "cache")
+
+
 def test_build_cli_needs_no_neo4j(tmp_path, monkeypatch):
     source = tmp_path / "source"
     _write(source, "test:one")
