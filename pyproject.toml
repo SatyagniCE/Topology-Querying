@@ -12,6 +12,7 @@ dependencies = ["networkx>=3,<4", "pydantic>=2,<3"]
 [project.scripts]
 circuit-ingest = "circuit_ingest.cli:main"
 circuit-neo4j = "circuit_ingest.neo4j_cli:main"
+circuit-networkx = "circuit_ingest.networkx_corpus:main"
 
 [project.optional-dependencies]
 test = ["pytest>=8,<9"]

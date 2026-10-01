@@ -162,3 +162,25 @@ The audit reads expected totals and device-type counts from that report at run
 time. It also checks terminal and port relationship integrity and the circuit
 755/Q30 substrate connection to net `0`. A nonzero exit means a mismatch or a
 connection/report error; the command prints each mismatch to stderr.
+
+## Cache canonical circuits as NetworkX graphs
+
+After generating `output/analoggenie` with the parser command above, build a
+separate directed multigraph for each circuit:
+
+```bash
+circuit-networkx build --input-dir output/analoggenie --output-dir output/networkx
+```
+
+Load a single graph by its canonical ID without a Neo4j connection:
+
+```python
+from pathlib import Path
+from circuit_ingest.networkx_corpus import load_graph
+
+graph = load_graph(Path("output/networkx"), "analoggenie:755")
+```
+
+The cache is a set of local pickle files plus a manifest keyed by `circuit_id`.
+Only load caches you generated and trust: Python pickle can execute code when
+opened. The canonical JSON remains the portable source for rebuilding graphs.
