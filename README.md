@@ -72,3 +72,33 @@ java -version
 
 The private runtime must report Java 21, and the last command must still
 report the system Java 8. The status command and HTTP request must succeed.
+
+## Store canonical circuits in Neo4j
+
+Install the optional Python driver, export the local connection settings,
+then import the parser's `circuits/*.json` files:
+
+```bash
+python -m pip install -e '.[neo4j,test]'
+set -a
+source ~/.config/query-retrieve/neo4j.env
+set +a
+circuit-neo4j import --input-dir output/analoggenie
+```
+
+The command creates ID constraints before writing, replaces each circuit in
+one transaction, and reports imported and failed file counts. It exits nonzero
+if any file fails. These Cypher examples return circuits by connected device
+type and named Net, or by a declared Port whose Net has no device terminals:
+
+```cypher
+MATCH (c:Circuit)-[:HAS_DEVICE]->(d:Device {canonical_type: 'npn'})
+      -[:CONNECTED_TO]->(n:Net {name: '0'})
+RETURN DISTINCT c.id AS circuit_id
+LIMIT 25;
+
+MATCH (c:Circuit)-[:HAS_PORT]->(p:Port {referenced_by_device: false})
+      -[:MAPS_TO]->(n:Net {degree_by_terminal: 0})
+RETURN c.id AS circuit_id, p.name AS port, n.name AS net
+LIMIT 25;
+```

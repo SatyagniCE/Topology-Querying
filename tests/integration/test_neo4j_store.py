@@ -12,6 +12,7 @@ from circuit_ingest.models import (
     ParserRecord, PortRecord, SourceRecord, Statistics,
 )
 from circuit_ingest.neo4j_store import create_constraints, replace_circuit
+from circuit_ingest.neo4j_cli import run
 
 
 def _record(circuit_id: str) -> CircuitRecord:
@@ -178,3 +179,53 @@ def test_device_net_pattern_returns_circuit(database):
         RETURN c.id AS circuit_id, count(DISTINCT d) AS devices
     """, id=circuit_id)
     assert dict(row) == {"circuit_id": circuit_id, "devices": 2}
+
+
+def test_import_cli_reports_valid_and_invalid_records(database, tmp_path, monkeypatch, capsys):
+    driver, db, circuit_id = database
+    settings = _settings()
+    for name in ("NEO4J_URI", "NEO4J_USER", "NEO4J_PASSWORD", "NEO4J_DATABASE"):
+        monkeypatch.setenv(name, settings[name])
+    input_dir = tmp_path / "input"
+    circuits = input_dir / "circuits"
+    circuits.mkdir(parents=True)
+    (circuits / "valid.json").write_text(_record(circuit_id).model_dump_json(), encoding="utf-8")
+    (circuits / "invalid.json").write_text("{not-json", encoding="utf-8")
+
+    result = run(["import", "--input-dir", str(input_dir)])
+
+    output = capsys.readouterr()
+    assert result != 0
+    assert "invalid.json" in output.err
+    assert "imported=1" in output.out
+    assert "failed=1" in output.out
+    assert _one(driver, db, "MATCH (c:Circuit {id:$id}) RETURN count(c) AS n", id=circuit_id)["n"] == 1
+
+
+def test_import_cli_rejects_invalid_record_without_partial_graph(database, tmp_path, monkeypatch):
+    driver, db, circuit_id = database
+    settings = _settings()
+    for name in ("NEO4J_URI", "NEO4J_USER", "NEO4J_PASSWORD", "NEO4J_DATABASE"):
+        monkeypatch.setenv(name, settings[name])
+    input_dir = tmp_path / "input"
+    circuits = input_dir / "circuits"
+    circuits.mkdir(parents=True)
+    record = _record(circuit_id)
+    record.devices[0].connections[0].net_id = "missing"
+    (circuits / "invalid.json").write_text(record.model_dump_json(), encoding="utf-8")
+
+    assert run(["import", "--input-dir", str(input_dir)]) != 0
+    assert _one(driver, db, "MATCH (c:Circuit {id:$id}) RETURN count(c) AS n", id=circuit_id)["n"] == 0
+
+
+def test_import_cli_reports_unreachable_database(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("NEO4J_URI", "bolt://127.0.0.1:1")
+    monkeypatch.setenv("NEO4J_USER", "neo4j")
+    monkeypatch.setenv("NEO4J_PASSWORD", "not-used")
+    monkeypatch.setenv("NEO4J_DATABASE", "neo4j")
+    circuits = tmp_path / "circuits"
+    circuits.mkdir()
+    (circuits / "valid.json").write_text(_record("test:unreachable").model_dump_json(), encoding="utf-8")
+
+    assert run(["import", "--input-dir", str(tmp_path)]) != 0
+    assert "connect" in capsys.readouterr().err.lower()
