@@ -98,3 +98,65 @@ def test_build_cli_needs_no_neo4j(tmp_path, monkeypatch):
         monkeypatch.delenv(name, raising=False)
     assert run(["build", "--input-dir", str(source), "--output-dir", str(tmp_path / "cache")]) == 0
     assert load_graph(tmp_path / "cache", "test:one").number_of_nodes() == 6
+
+
+def _report(path: Path, record) -> Path:
+    path.write_text(json.dumps({
+        "status_counts": {"valid": 1},
+        "totals": {"devices": record.statistics.device_count,
+                   "nets": record.statistics.net_count,
+                   "ports": record.statistics.external_port_count,
+                   "connections": record.statistics.connection_count},
+        "canonical_device_type_counts": record.statistics.device_type_counts,
+    }), encoding="utf-8")
+    return path
+
+
+def test_audit_matches_tiny_corpus_and_spot_check(tmp_path):
+    from circuit_ingest.networkx_corpus import audit_corpus
+    source = tmp_path / "source"
+    record = sample_record("analoggenie:755", duplicate=False)
+    _write(source, "analoggenie:755")
+    (source / "circuits/755.json").write_text(record.model_dump_json(), encoding="utf-8")
+    cache = tmp_path / "cache"
+    build_corpus(source, cache)
+    assert audit_corpus(cache, _report(tmp_path / "report.json", record)) == []
+
+
+@pytest.mark.parametrize("field,expected", [
+    ("status", "Circuit"), ("devices", "Device"), ("nets", "Net"),
+    ("ports", "Port"), ("connections", "CONNECTED_TO"),
+    ("type", "device type npn"),
+])
+def test_report_change_changes_expected_counts(tmp_path, field, expected):
+    from circuit_ingest.networkx_corpus import audit_corpus
+    record = sample_record("analoggenie:755", duplicate=False)
+    source = tmp_path / "source"
+    _write(source, "analoggenie:755")
+    (source / "circuits/755.json").write_text(record.model_dump_json(), encoding="utf-8")
+    cache = tmp_path / "cache"
+    build_corpus(source, cache)
+    report = _report(tmp_path / "report.json", record)
+    data = json.loads(report.read_text())
+    if field == "status":
+        data["status_counts"]["valid"] += 1
+    elif field == "type":
+        data["canonical_device_type_counts"]["npn"] += 1
+    else:
+        data["totals"][field] += 1
+    report.write_text(json.dumps(data), encoding="utf-8")
+    assert any(expected in message for message in audit_corpus(cache, report))
+
+
+def test_audit_cli_exits_nonzero_for_changed_report(tmp_path):
+    record = sample_record("analoggenie:755", duplicate=False)
+    source = tmp_path / "source"
+    _write(source, "analoggenie:755")
+    (source / "circuits/755.json").write_text(record.model_dump_json(), encoding="utf-8")
+    cache = tmp_path / "cache"
+    build_corpus(source, cache)
+    report = _report(tmp_path / "report.json", record)
+    data = json.loads(report.read_text())
+    data["totals"]["devices"] += 1
+    report.write_text(json.dumps(data), encoding="utf-8")
+    assert run(["audit", "--output-dir", str(cache), "--report", str(report)]) == 1

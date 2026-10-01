@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 from hashlib import sha256
 import json
 import os
@@ -112,14 +113,68 @@ def iter_graphs(output_dir: Path) -> Iterator[tuple[str, nx.MultiDiGraph]]:
         yield circuit_id, _load_entry(output_dir, circuit_id, manifest[circuit_id])
 
 
+def audit_corpus(output_dir: Path, report_path: Path) -> list[str]:
+    """Compare cached topology with the generated parser report."""
+    report = json.loads(Path(report_path).read_text(encoding="utf-8"))
+    totals = report["totals"]
+    statuses = report["status_counts"]
+    expected = {
+        "Circuit": statuses.get("valid", 0) + statuses.get("valid_with_warnings", 0),
+        "Device": totals["devices"], "Net": totals["nets"],
+        "Port": totals["ports"], "CONNECTED_TO": totals["connections"],
+        "MAPS_TO": totals["ports"],
+    }
+    counts: Counter[str] = Counter()
+    device_types: Counter[str] = Counter()
+    spot_contacts: list[tuple[str, int]] = []
+    for circuit_id, graph in iter_graphs(output_dir):
+        counts["Circuit"] += 1
+        for _, attributes in graph.nodes(data=True):
+            kind = attributes["kind"]
+            counts[kind] += 1
+            if kind == "Device":
+                device_types[attributes["canonical_type"]] += 1
+        for _, _, attributes in graph.edges(data=True):
+            counts[attributes["kind"]] += 1
+        if circuit_id == "analoggenie:755":
+            spot_contacts = [
+                (target, edge["terminal_ordinal"])
+                for device, attributes in graph.nodes(data=True)
+                if attributes["kind"] == "Device" and attributes["source_instance"] == "Q30"
+                for _, target, _, edge in graph.out_edges(device, keys=True, data=True)
+                if edge["kind"] == "CONNECTED_TO" and edge["terminal"] == "substrate"
+                and graph.nodes[target]["name"] == "0"
+            ]
+    problems = [f"{kind}: expected {wanted}, found {counts[kind]}"
+                for kind, wanted in expected.items() if counts[kind] != wanted]
+    wanted_types = report["canonical_device_type_counts"]
+    for kind in sorted(set(wanted_types) | set(device_types)):
+        if device_types[kind] != wanted_types.get(kind, 0):
+            problems.append(f"device type {kind}: expected {wanted_types.get(kind, 0)}, "
+                            f"found {device_types[kind]}")
+    if spot_contacts != [("analoggenie:755:net:0", 3)]:
+        problems.append("Q30 substrate to net 0: expected one terminal ordinal 3, "
+                        f"found {spot_contacts}")
+    return problems
+
+
 def run(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="circuit-networkx")
     commands = parser.add_subparsers(dest="command", required=True)
     builder = commands.add_parser("build", help="cache canonical circuits as graphs")
     builder.add_argument("--input-dir", required=True, type=Path)
     builder.add_argument("--output-dir", required=True, type=Path)
+    auditor = commands.add_parser("audit", help="compare cached graphs to parser report")
+    auditor.add_argument("--output-dir", required=True, type=Path)
+    auditor.add_argument("--report", required=True, type=Path)
     args = parser.parse_args(argv)
     try:
+        if args.command == "audit":
+            problems = audit_corpus(args.output_dir, args.report)
+            for problem in problems:
+                print(problem, file=sys.stderr)
+            print(f"NetworkX audit: mismatches={len(problems)}")
+            return 1 if problems else 0
         paths = build_corpus(args.input_dir, args.output_dir)
     except Exception as exc:
         print(exc, file=sys.stderr)

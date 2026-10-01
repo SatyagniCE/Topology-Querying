@@ -170,6 +170,8 @@ separate directed multigraph for each circuit:
 
 ```bash
 circuit-networkx build --input-dir output/analoggenie --output-dir output/networkx
+circuit-networkx audit --output-dir output/networkx \
+  --report output/analoggenie/audit-report.json
 ```
 
 Load a single graph by its canonical ID without a Neo4j connection:
@@ -184,3 +186,6 @@ graph = load_graph(Path("output/networkx"), "analoggenie:755")
 The cache is a set of local pickle files plus a manifest keyed by `circuit_id`.
 Only load caches you generated and trust: Python pickle can execute code when
 opened. The canonical JSON remains the portable source for rebuilding graphs.
+The audit reads expected totals and device-type counts from the generated
+parser report, checks every graph, and traverses circuit 755's Q30 substrate
+connection. A mismatch prints to stderr and returns a nonzero exit status.
