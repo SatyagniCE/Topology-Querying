@@ -75,8 +75,12 @@ def audit_database(driver: Driver, database: str, report_path: Path) -> list[str
     invalid_port_mappings = _count(driver, database, """
         MATCH (p:Port)
         OPTIONAL MATCH (p)-[r:MAPS_TO]->(n:Net)
-        WITH p, count(r) AS links
-        WHERE links <> 1
+        WITH p, count(r) AS links, collect(n) AS mapped_nets
+        WHERE links <> 1 OR NOT EXISTS {
+            MATCH (c:Circuit)-[:HAS_PORT]->(p)
+            MATCH (c)-[:HAS_NET]->(owned_net:Net)
+            WHERE owned_net IN mapped_nets
+        }
         RETURN count(p) AS n
     """)
     cross_circuit_connections = _count(driver, database, """

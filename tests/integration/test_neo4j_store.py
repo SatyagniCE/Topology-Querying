@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import json
 from pathlib import Path
+from uuid import uuid4
 
 import pytest
 from neo4j import GraphDatabase
@@ -15,8 +16,6 @@ from circuit_ingest.models import (
 from circuit_ingest.neo4j_store import create_constraints, replace_circuit
 from circuit_ingest.neo4j_cli import run
 from circuit_ingest.neo4j_audit import audit_database
-from circuit_ingest.loader import discover
-from circuit_ingest.parser import AnalogGenieParser
 
 
 def _record(circuit_id: str) -> CircuitRecord:
@@ -83,11 +82,22 @@ def _settings() -> dict[str, str]:
 @pytest.fixture
 def database(request):
     settings = _settings()
+    required = ("NEO4J_URI", "NEO4J_USER", "NEO4J_PASSWORD", "NEO4J_DATABASE")
+    if any(name not in settings for name in required):
+        if os.environ.get("NEO4J_TEST_REQUIRED") == "1":
+            pytest.fail("Neo4j integration test settings are missing")
+        pytest.skip("Neo4j integration test settings are missing")
     driver = GraphDatabase.driver(settings["NEO4J_URI"],
                                   auth=(settings["NEO4J_USER"], settings["NEO4J_PASSWORD"]))
-    driver.verify_connectivity()
+    try:
+        driver.verify_connectivity()
+    except Exception:
+        driver.close()
+        if os.environ.get("NEO4J_TEST_REQUIRED") == "1":
+            raise
+        pytest.skip("Neo4j integration database is unavailable")
     database_name = settings["NEO4J_DATABASE"]
-    circuit_id = f"test:neo4j:{request.node.name}"
+    circuit_id = f"test:neo4j:{request.node.name}:{uuid4().hex}"
     create_constraints(driver, database_name)
     try:
         yield driver, database_name, circuit_id
@@ -114,7 +124,10 @@ def test_terminal_direction_and_ordinal(database):
     """, id=circuit_id)
     assert dict(row) == {"terminal": "substrate", "ordinal": 3,
                          "net_id": f"{circuit_id}:net:0"}
-    assert _one(driver, db, "MATCH (:Net)-[r:CONNECTED_TO]->(:Device) RETURN count(r) AS n")["n"] == 0
+    assert _one(driver, db, """
+        MATCH (c:Circuit {id:$id})-[:HAS_NET]->(n:Net)-[r:CONNECTED_TO]->(:Device)
+        RETURN count(r) AS n
+    """, id=circuit_id)["n"] == 0
 
 
 def test_zero_degree_port_maps_to_net(database):
@@ -236,48 +249,52 @@ def test_import_cli_reports_unreachable_database(tmp_path, monkeypatch, capsys):
 
 
 def test_audit_spot_checks_circuit_755_q30_substrate(database, tmp_path, monkeypatch):
+    if os.environ.get("NEO4J_CORPUS_TEST") != "1":
+        pytest.skip("set NEO4J_CORPUS_TEST=1 after loading the full corpus")
     driver, db, _ = database
     root = Path(__file__).parents[2]
-    existing = _one(driver, db, "MATCH (c:Circuit {id:'analoggenie:755'}) RETURN count(c) AS n")["n"]
-    if existing:
-        report = root / "analoggenie-audit-report.json"
-        report_data = json.loads(report.read_text(encoding="utf-8"))
-    else:
-        dataset = root / "AnalogGenie" / "Dataset"
-        source = next(bundle for bundle in discover(dataset) if bundle.circuit_id == "755")
-        result = AnalogGenieParser().parse(source)
-        assert result.circuit is not None
-        record = result.circuit
-        replace_circuit(driver, db, record)
-        report = tmp_path / "audit-report.json"
-        report_data = {
-            "status_counts": {"valid": 1, "valid_with_warnings": 0},
-            "totals": {"devices": record.statistics.device_count,
-                       "nets": record.statistics.net_count,
-                       "ports": record.statistics.external_port_count,
-                       "connections": record.statistics.connection_count},
-            "canonical_device_type_counts": record.statistics.device_type_counts,
-        }
-        report.write_text(json.dumps(report_data), encoding="utf-8")
+    report = root / "analoggenie-audit-report.json"
+    report_data = json.loads(report.read_text(encoding="utf-8"))
+    assert audit_database(driver, db, report) == []
+    settings = _settings()
+    for name in ("NEO4J_URI", "NEO4J_USER", "NEO4J_PASSWORD", "NEO4J_DATABASE"):
+        monkeypatch.setenv(name, settings[name])
+    assert run(["audit", "--report", str(report)]) == 0
+    report_data["totals"]["devices"] += 1
+    wrong_report = tmp_path / "wrong-audit-report.json"
+    wrong_report.write_text(json.dumps(report_data), encoding="utf-8")
+    assert run(["audit", "--report", str(wrong_report)]) == 1
+    row = _one(driver, db, """
+        MATCH (c:Circuit {id:'analoggenie:755'})-[:HAS_DEVICE]->
+              (d:Device {source_instance:'Q30'})-
+              [r:CONNECTED_TO {terminal:'substrate'}]->(n:Net {name:'0'})
+        RETURN count(r) AS n, collect(r.terminal_ordinal) AS ordinals
+    """)
+    assert dict(row) == {"n": 1, "ordinals": [3]}
+
+
+def test_audit_rejects_port_mapping_to_another_circuit(database, tmp_path):
+    driver, db, circuit_id = database
+    other_id = f"{circuit_id}:other"
+    replace_circuit(driver, db, _record(circuit_id))
+    replace_circuit(driver, db, _record(other_id))
     try:
-        assert audit_database(driver, db, report) == []
-        settings = _settings()
-        for name in ("NEO4J_URI", "NEO4J_USER", "NEO4J_PASSWORD", "NEO4J_DATABASE"):
-            monkeypatch.setenv(name, settings[name])
-        assert run(["audit", "--report", str(report)]) == 0
-        report_data["totals"]["devices"] += 1
-        wrong_report = tmp_path / "wrong-audit-report.json"
-        wrong_report.write_text(json.dumps(report_data), encoding="utf-8")
-        assert run(["audit", "--report", str(wrong_report)]) == 1
-        row = _one(driver, db, """
-            MATCH (c:Circuit {id:'analoggenie:755'})-[:HAS_DEVICE]->
-                  (d:Device {source_instance:'Q30'})-
-                  [r:CONNECTED_TO {terminal:'substrate'}]->(n:Net {name:'0'})
-            RETURN count(r) AS n, collect(r.terminal_ordinal) AS ordinals
-        """)
-        assert dict(row) == {"n": 1, "ordinals": [3]}
+        with driver.session(database=db) as session:
+            session.run("""
+                MATCH (:Circuit {id:$id})-[:HAS_PORT]->(p:Port)-[r:MAPS_TO]->(:Net)
+                MATCH (:Circuit {id:$other})-[:HAS_NET]->(n:Net {name:'unused'})
+                DELETE r
+                CREATE (p)-[:MAPS_TO]->(n)
+            """, id=circuit_id, other=other_id).consume()
+        report = tmp_path / "report.json"
+        report.write_text(json.dumps({
+            "status_counts": {"valid": 2},
+            "totals": {"devices": 4, "nets": 6, "ports": 2, "connections": 16},
+            "canonical_device_type_counts": {"npn": 4},
+        }), encoding="utf-8")
+        assert any("port mappings" in problem for problem in audit_database(driver, db, report))
     finally:
-        if not existing:
-            with driver.session(database=db) as session:
-                session.run("MATCH (c:Circuit {id:'analoggenie:755'})-[:HAS_DEVICE|HAS_NET|HAS_PORT]->(n) DETACH DELETE n").consume()
-                session.run("MATCH (c:Circuit {id:'analoggenie:755'}) DETACH DELETE c").consume()
+        with driver.session(database=db) as session:
+            session.run("MATCH (c:Circuit {id:$id})-[:HAS_DEVICE|HAS_NET|HAS_PORT]->(n) DETACH DELETE n",
+                        id=other_id).consume()
+            session.run("MATCH (c:Circuit {id:$id}) DETACH DELETE c", id=other_id).consume()
