@@ -36,6 +36,49 @@ The upstream [AnalogGenie](https://github.com/xz-group/AnalogGenie) corpus is in
 
 The tests include a small checked-in `.cir` fixture and graph JSON fixtures; the full corpus is available for further conversion experiments.
 
+## Step 1: Parse the AnalogGenie topology corpus
+
+The `circuit_ingest` package parses official flattened `Dataset/<id>/<id>.cir` files
+with their `Port<id>.txt` files into versioned canonical circuit records. It does
+not run simulation, infer electrical values, build a graph, or create embeddings.
+Parsing uses the trailing device type and preserves every terminal, including the
+fourth BJT substrate connection. Raw instance names are retained for provenance;
+internal device IDs are unique source-order ordinals.
+
+```bash
+git submodule update --init --recursive
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[test]'
+circuit-ingest parse-analoggenie --dataset-root AnalogGenie/Dataset \
+  --output-dir output/analoggenie --mode strict \
+  --source-commit "$(git -C AnalogGenie rev-parse HEAD)"
+```
+
+`parse-analoggenie` writes `circuits/<id>.json`, `manifest.jsonl`, `issues.jsonl`,
+`audit-report.json`, and `canonical-circuit.schema.json` under the output
+directory. The circuit records and audit report are deterministic for the pinned
+source and parser version; generated files stay outside Git. `audit-analoggenie`
+validates without writing circuit files;
+pass `--report-path path/to/report.json` to save its summary. Both commands
+accept `--source-commit` for source provenance.
+
+Strict mode quarantines unknown device types. Lenient mode keeps them as opaque
+devices with positional terminals and a warning. Syntax errors, known-device
+arity errors, duplicate ports, and missing required files still quarantine or
+fail a circuit. Quarantined records appear in the manifest and issues stream,
+without a circuit JSON output. Exit code `0` means all discovered circuits are
+safe to ingest, `1` means some were quarantined or failed, `2` means invalid
+arguments or an inaccessible dataset, and `3` means an unexpected internal error.
+
+The existing `parse_netlist` entry point now routes complete official primary
+AnalogGenie bundles through this adapter. Its returned `ParsedNetlist` remains a
+compatibility view for existing graph callers; the `CircuitRecord` JSON is the
+stable boundary for future RAG stages. Generic or hierarchical netlists continue
+through the existing parser.
+
+The five documented unused ports are preserved as isolated external nets.
+
 ## Local Neo4j runtime
 
 Install the pinned Neo4j Community 2026.09.0 and Temurin 21 JRE in your own
