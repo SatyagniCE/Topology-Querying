@@ -13,7 +13,7 @@ NEO4J_HOME="${INSTALL_ROOT}/neo4j-community-${NEO4J_RELEASE}"
 ENV_FILE="${HOME}/.config/query-retrieve/neo4j.env"
 
 usage() {
-    printf 'Usage: %s install|start|stop|status\n' "$0" >&2
+    printf 'Usage: %s install|start|stop|status|console\n' "$0" >&2
     exit 2
 }
 
@@ -101,5 +101,6 @@ case "${1:-}" in
     start) neo4j_command start ;;
     stop) neo4j_command stop ;;
     status) neo4j_command status ;;
+    console) neo4j_command console ;;
     *) usage ;;
 esac

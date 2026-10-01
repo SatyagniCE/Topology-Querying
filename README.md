@@ -91,6 +91,9 @@ scripts/neo4j-local.sh stop
 scripts/neo4j-local.sh status
 ```
 
+If your execution environment stops background processes when a command ends,
+run `scripts/neo4j-local.sh console` in a persistent terminal after `install`.
+
 `install` checks the published SHA-256 values before extracting either archive,
 sets a random initial password, and starts Neo4j. It refuses to overwrite an
 existing installation. The database listens only on `127.0.0.1`: Bolt at
