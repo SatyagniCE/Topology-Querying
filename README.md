@@ -47,6 +47,8 @@ internal device IDs are unique source-order ordinals.
 
 ```bash
 git submodule update --init --recursive
+python -m venv .venv
+source .venv/bin/activate
 python -m pip install -e '.[test]'
 circuit-ingest parse-analoggenie --dataset-root AnalogGenie/Dataset \
   --output-dir output/analoggenie --mode strict \
@@ -76,3 +78,87 @@ stable boundary for future RAG stages. Generic or hierarchical netlists continue
 through the existing parser.
 
 The five documented unused ports are preserved as isolated external nets.
+
+## Local Neo4j runtime
+
+Install the pinned Neo4j Community 2026.09.0 and Temurin 21 JRE in your own
+home directory, then start or stop the database with:
+
+```bash
+scripts/neo4j-local.sh install
+scripts/neo4j-local.sh start
+scripts/neo4j-local.sh stop
+scripts/neo4j-local.sh status
+```
+
+If your execution environment stops background processes when a command ends,
+run `scripts/neo4j-local.sh console` in a persistent terminal after `install`.
+
+`install` checks the published SHA-256 values before extracting either archive,
+sets a random initial password, and starts Neo4j. It refuses to overwrite an
+existing installation. The database listens only on `127.0.0.1`: Bolt at
+`bolt://127.0.0.1:7687` and Neo4j Browser at `http://127.0.0.1:7474`.
+The runtime is under `~/.local/opt/`; its `data/`, `logs/`, and `conf/`
+directories are under `~/.local/opt/neo4j-community-2026.09.0/`.
+Credentials and connection settings are in
+`~/.config/query-retrieve/neo4j.env` with mode `0600`. Source that file in
+your shell when using the import commands; do not copy it into this repository.
+The script supplies Java 21 only to Neo4j processes and does not alter the
+system Java. Local Fleet discovery and usage reporting are disabled.
+
+After installation, verify the runtime with:
+
+```bash
+bash -n scripts/neo4j-local.sh
+scripts/neo4j-local.sh status
+~/.local/opt/temurin-21/bin/java -version
+curl -I http://localhost:7474
+java -version
+```
+
+The private runtime must report Java 21, and the last command must still
+report the system Java 8. The status command and HTTP request must succeed.
+
+## Store canonical circuits in Neo4j
+
+Run the parser generation step above first. It creates both the circuit JSON
+files and their matching audit report in `output/analoggenie`. Then export the
+local connection settings and import the generated files:
+
+```bash
+python -m pip install -e '.[neo4j,test]'
+set -a
+source ~/.config/query-retrieve/neo4j.env
+set +a
+circuit-neo4j import --input-dir output/analoggenie
+```
+
+The command creates ID constraints before writing, replaces each circuit in
+one transaction, and reports imported and failed file counts. It exits nonzero
+if any file fails. These Cypher examples return circuits by connected device
+type and named Net, or by a declared Port whose Net has no device terminals:
+
+```cypher
+MATCH (c:Circuit)-[:HAS_DEVICE]->(d:Device {canonical_type: 'npn'})
+      -[:CONNECTED_TO]->(n:Net {name: '0'})
+RETURN DISTINCT c.id AS circuit_id
+LIMIT 25;
+
+MATCH (c:Circuit)-[:HAS_PORT]->(p:Port {referenced_by_device: false})
+      -[:MAPS_TO]->(n:Net {degree_by_terminal: 0})
+RETURN c.id AS circuit_id, p.name AS port, n.name AS net
+LIMIT 25;
+```
+
+After loading the full corpus, compare the database with the current parser
+audit report:
+
+```bash
+circuit-neo4j audit --report output/analoggenie/audit-report.json
+NEO4J_TEST_REQUIRED=1 NEO4J_CORPUS_TEST=1 python -m pytest -q
+```
+
+The audit reads expected totals and device-type counts from that report at run
+time. It also checks terminal and port relationship integrity and the circuit
+755/Q30 substrate connection to net `0`. A nonzero exit means a mismatch or a
+connection/report error; the command prints each mismatch to stderr.
