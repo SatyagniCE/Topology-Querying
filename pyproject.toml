@@ -7,7 +7,7 @@ name = "topology-querying"
 version = "0.1.0"
 description = "Parse analog .cir netlists into deterministic device graphs"
 requires-python = ">=3.11"
-dependencies = ["networkx>=3,<4", "pydantic>=2,<3"]
+dependencies = ["networkx>=3,<4", "pyvis>=0.3.2,<0.4", "pydantic>=2,<3"]
 
 [project.scripts]
 circuit-ingest = "circuit_ingest.cli:main"

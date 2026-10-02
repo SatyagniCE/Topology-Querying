@@ -188,6 +188,27 @@ def test_rails_are_flags_and_repeated_terminals_are_masks():
     )
 
 
+def test_node_terminal_net_map_includes_exact_rail_and_signal_nets(tmp_path: Path):
+    graph = build_device_graph(
+        parse_netlist("M1 (out ctrl VDD 0) nmos\nR1 (out VSS) resistor", {}),
+        TopologyAnnotations(rail_aliases={"VDD": "vdd", "0": "gnd", "VSS": "gnd"}),
+    )
+    path = tmp_path / "graph.json"
+    write_device_graph(path, graph)
+    nodes = {node.id: node for node in read_device_graph(path).nodes}
+    document = json.loads(path.read_text(encoding="utf-8"))
+
+    assert nodes["M1"].terminal_nets == (
+        ("drain", "out"), ("gate", "ctrl"),
+        ("source", "VDD"), ("body", "0"),
+    )
+    assert nodes["R1"].terminal_nets == (("positive", "out"), ("negative", "VSS"))
+    assert next(node for node in document["nodes"] if node["id"] == "M1")["terminal_nets"] == [
+        ["drain", "out"], ["gate", "ctrl"], ["source", "VDD"], ["body", "0"]
+    ]
+    assert {edge["net"] for edge in document["edges"]} == {"out"}
+
+
 def test_multiple_nets_between_a_pair_are_retained_with_pair_local_indices():
     """Coalescing two nets between a pair must not turn a multigraph into a graph."""
     graph = build_device_graph(
@@ -358,6 +379,43 @@ def test_canonical_graph_contains_immutable_converter_and_schema_versions():
     assert document["graph_schema_version"] == 1
 
 
+def test_legacy_graph_without_terminal_nets_remains_readable_and_writable(tmp_path: Path):
+    source = Path(__file__).parents[1] / "fixtures/graphs/parallel_and_rails.graph.json"
+    graph = read_device_graph(source)
+    destination = tmp_path / "legacy.graph.json"
+    write_device_graph(destination, graph)
+
+    assert all(node.terminal_nets == () for node in graph.nodes)
+    assert json.loads(destination.read_text(encoding="utf-8")) == json.loads(
+        source.read_text(encoding="utf-8")
+    )
+
+
+@pytest.mark.parametrize("mutation", ("empty", "incomplete", "wrong_role", "wrong_net", "edge_mismatch"))
+def test_graph_reader_rejects_invalid_terminal_net_map(tmp_path: Path, mutation: str):
+    graph = build_device_graph(
+        parse_netlist("R1 (shared 0) resistor\nC1 (shared other) capacitor", {}),
+        TopologyAnnotations(),
+    )
+    document = device_graph_to_dict(graph)
+    node = next(item for item in document["nodes"] if item["id"] == "R1")
+    if mutation == "empty":
+        node["terminal_nets"] = []
+    elif mutation == "incomplete":
+        node["terminal_nets"] = [["positive", "shared"]]
+    elif mutation == "wrong_role":
+        node["terminal_nets"][0][0] = "negative"
+    elif mutation == "wrong_net":
+        node["terminal_nets"][1][1] = 0
+    elif mutation == "edge_mismatch":
+        node["terminal_nets"][0][1] = "other"
+    path = tmp_path / "invalid.graph.json"
+    path.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="invalid device graph"):
+        read_device_graph(path)
+
+
 @pytest.mark.parametrize(
     "mutation",
     (
@@ -425,6 +483,9 @@ def test_parallel_and_rails_golden_graph_is_exact(tmp_path: Path):
         path, build_device_graph(parse_netlist(PARALLEL_RAIL_NETLIST, {}), annotations)
     )
 
-    assert path.read_text(encoding="utf-8") == (
-        fixture_root / "parallel_and_rails.graph.json"
-    ).read_text(encoding="utf-8")
+    current = json.loads(path.read_text(encoding="utf-8"))
+    for node in current["nodes"]:
+        assert node.pop("terminal_nets")
+    assert current == json.loads(
+        (fixture_root / "parallel_and_rails.graph.json").read_text(encoding="utf-8")
+    )

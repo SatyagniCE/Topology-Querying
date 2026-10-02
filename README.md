@@ -28,7 +28,16 @@ graph = build_device_graph(parsed, annotations)
 write_device_graph(Path("example.graph.json"), graph)
 ```
 
-`fixed_values` maps names to numeric values for bare-symbol attributes. Compound expressions stay unevaluated. `TopologyAnnotations` uses exact net names; its roles must refer to nets present in the parsed circuit. `read_device_graph` validates versioned JSON when loading it.
+`fixed_values` maps names to numeric values for bare-symbol attributes. Compound expressions stay unevaluated. `TopologyAnnotations` uses exact net names; its roles must refer to nets present in the parsed circuit. `read_device_graph` validates versioned JSON when loading it. New graphs add `terminal_nets` to each node as ordered `[terminal_role, net_name]` pairs, including rails. Older graph JSON without this field remains readable and writable.
+
+## View a graph
+
+```bash
+python -m gnn_pruning.visualization.render path/to/graph.json --out circuit.html
+python -m gnn_pruning.visualization.render path/to/graphs --out path/to/html
+```
+
+The folder command finds `graph.json` and `*.graph.json` files recursively and preserves their relative folders. Each HTML file contains its visualization assets and can be opened locally. Colors identify device types; node badges and thick borders mark VDD or ground rail contact. Hover over nodes for every terminal's exact net, including rails, or over edges for net names and connected terminals. Edge names are hidden until hover to keep dense graphs readable. A viewer opened from older graph JSON infers only the connections that its edges retain and marks any other terminal net as unavailable.
 
 ## AnalogGenie corpus
 
