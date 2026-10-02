@@ -47,7 +47,7 @@ credentials, virtual environment, and NetworkX pickle cache remain local.
 | `src/gnn_pruning/` | General netlist conversion and device graph viewer |
 | `queries/` | Example Cypher with graph links |
 | `scripts/` | Fresh-machine setup and local runtime commands |
-| `examples/` | Earlier graph/viewer examples |
+| `examples/` | Earlier graph/viewer examples and a previous audit report |
 | `AnalogGenie/` | Pinned upstream submodule; fetch to reparse source data |
 
 Generated build outputs in `output/` are ignored by Git. To regenerate the
