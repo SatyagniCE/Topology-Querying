@@ -1,0 +1,247 @@
+{
+  "circuit_id": "analoggenie:370",
+  "dataset": "AnalogGenie",
+  "devices": [
+    {
+      "canonical_type": "nmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:370:net:net05",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:370:net:net05",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:370:net:VSS",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:370:net:VSS",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:370:device:000001",
+      "ordinal": 1,
+      "parameters": {},
+      "raw_line": "M4 (net05 net05 VSS VSS) nmos4",
+      "raw_type": "nmos4",
+      "source_instance": "M4",
+      "source_line": 1
+    },
+    {
+      "canonical_type": "nmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:370:net:net017",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:370:net:net05",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:370:net:VSS",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:370:net:VSS",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:370:device:000002",
+      "ordinal": 2,
+      "parameters": {},
+      "raw_line": "M1 (net017 net05 VSS VSS) nmos4",
+      "raw_type": "nmos4",
+      "source_instance": "M1",
+      "source_line": 2
+    },
+    {
+      "canonical_type": "resistor",
+      "category": "passive",
+      "connections": [
+        {
+          "net_id": "analoggenie:370:net:VDD",
+          "terminal": "p",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:370:net:net010",
+          "terminal": "n",
+          "terminal_ordinal": 1
+        }
+      ],
+      "id": "analoggenie:370:device:000003",
+      "ordinal": 3,
+      "parameters": {},
+      "raw_line": "R0 (VDD net010) resistor",
+      "raw_type": "resistor",
+      "source_instance": "R0",
+      "source_line": 3
+    },
+    {
+      "canonical_type": "pmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:370:net:net05",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:370:net:net017",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:370:net:net010",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:370:net:net010",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:370:device:000004",
+      "ordinal": 4,
+      "parameters": {},
+      "raw_line": "M13 (net05 net017 net010 net010) pmos4",
+      "raw_type": "pmos4",
+      "source_instance": "M13",
+      "source_line": 4
+    },
+    {
+      "canonical_type": "pmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:370:net:net017",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:370:net:net017",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:370:net:VDD",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:370:net:VDD",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:370:device:000005",
+      "ordinal": 5,
+      "parameters": {},
+      "raw_line": "M3 (net017 net017 VDD VDD) pmos4",
+      "raw_type": "pmos4",
+      "source_instance": "M3",
+      "source_line": 5
+    }
+  ],
+  "issues": [],
+  "nets": [
+    {
+      "degree_by_terminal": 4,
+      "id": "analoggenie:370:net:net05",
+      "is_external": false,
+      "name": "net05",
+      "port_ordinal": null
+    },
+    {
+      "degree_by_terminal": 4,
+      "id": "analoggenie:370:net:VSS",
+      "is_external": true,
+      "name": "VSS",
+      "port_ordinal": 1
+    },
+    {
+      "degree_by_terminal": 4,
+      "id": "analoggenie:370:net:net017",
+      "is_external": false,
+      "name": "net017",
+      "port_ordinal": null
+    },
+    {
+      "degree_by_terminal": 3,
+      "id": "analoggenie:370:net:VDD",
+      "is_external": true,
+      "name": "VDD",
+      "port_ordinal": 0
+    },
+    {
+      "degree_by_terminal": 3,
+      "id": "analoggenie:370:net:net010",
+      "is_external": false,
+      "name": "net010",
+      "port_ordinal": null
+    }
+  ],
+  "parser": {
+    "mode": "strict",
+    "name": "analoggenie",
+    "version": "1.0.0"
+  },
+  "ports": [
+    {
+      "name": "VDD",
+      "net_id": "analoggenie:370:net:VDD",
+      "ordinal": 0,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VSS",
+      "net_id": "analoggenie:370:net:VSS",
+      "ordinal": 1,
+      "referenced_by_device": true,
+      "role": null
+    }
+  ],
+  "schema_version": "1.0.0",
+  "source": {
+    "auxiliary_files": [
+      "Dataset/370/Book370.png",
+      "Dataset/370/Cadence370.png",
+      "Dataset/370/Pagenumber370.txt"
+    ],
+    "port_file": "Dataset/370/Port370.txt",
+    "port_sha256": "8e23dcc0ef067fe3232c496604f53bbf1b3cf7f7ca52170ff24a88a32c921304",
+    "primary_netlist": "Dataset/370/370.cir",
+    "primary_sha256": "09a41d068a00aa91e9dd45194525b91ad593d1f655e7b775ce2a0d698c361ada"
+  },
+  "source_circuit_id": "370",
+  "statistics": {
+    "connection_count": 18,
+    "device_count": 5,
+    "device_type_counts": {
+      "nmos": 2,
+      "pmos": 2,
+      "resistor": 1
+    },
+    "duplicate_source_instance_count": 0,
+    "external_port_count": 2,
+    "net_count": 5,
+    "unknown_device_type_count": 0,
+    "unreferenced_port_count": 0
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "circuit_id": "analoggenie:604",
+  "dataset": "AnalogGenie",
+  "devices": [
+    {
+      "canonical_type": "npn",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:604:net:IB1",
+          "terminal": "collector",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:604:net:IB1",
+          "terminal": "base",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:604:net:VSS",
+          "terminal": "emitter",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:604:net:0",
+          "terminal": "substrate",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:604:device:000001",
+      "ordinal": 1,
+      "parameters": {},
+      "raw_line": "Q1 (IB1 IB1 VSS 0) npn",
+      "raw_type": "npn",
+      "source_instance": "Q1",
+      "source_line": 1
+    },
+    {
+      "canonical_type": "npn",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:604:net:IOUT1",
+          "terminal": "collector",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:604:net:IB1",
+          "terminal": "base",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:604:net:VSS",
+          "terminal": "emitter",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:604:net:0",
+          "terminal": "substrate",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:604:device:000002",
+      "ordinal": 2,
+      "parameters": {},
+      "raw_line": "Q0 (IOUT1 IB1 VSS 0) npn",
+      "raw_type": "npn",
+      "source_instance": "Q0",
+      "source_line": 2
+    }
+  ],
+  "issues": [],
+  "nets": [
+    {
+      "degree_by_terminal": 3,
+      "id": "analoggenie:604:net:IB1",
+      "is_external": true,
+      "name": "IB1",
+      "port_ordinal": 2
+    },
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:604:net:VSS",
+      "is_external": true,
+      "name": "VSS",
+      "port_ordinal": 0
+    },
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:604:net:0",
+      "is_external": false,
+      "name": "0",
+      "port_ordinal": null
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:604:net:IOUT1",
+      "is_external": true,
+      "name": "IOUT1",
+      "port_ordinal": 1
+    }
+  ],
+  "parser": {
+    "mode": "strict",
+    "name": "analoggenie",
+    "version": "1.0.0"
+  },
+  "ports": [
+    {
+      "name": "VSS",
+      "net_id": "analoggenie:604:net:VSS",
+      "ordinal": 0,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "IOUT1",
+      "net_id": "analoggenie:604:net:IOUT1",
+      "ordinal": 1,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "IB1",
+      "net_id": "analoggenie:604:net:IB1",
+      "ordinal": 2,
+      "referenced_by_device": true,
+      "role": null
+    }
+  ],
+  "schema_version": "1.0.0",
+  "source": {
+    "auxiliary_files": [
+      "Dataset/604/Book604.png",
+      "Dataset/604/Cadence604.png",
+      "Dataset/604/Pagenumber604.txt"
+    ],
+    "port_file": "Dataset/604/Port604.txt",
+    "port_sha256": "d75d2f10126f58ef7bca4f73adc0783d4f4a499f0c7e2b2caf6856b8f019ad9a",
+    "primary_netlist": "Dataset/604/604.cir",
+    "primary_sha256": "4b45572be89c96cbdcfdf2491b44ab4afb0c60ed132ad5b1a48574bab23e2e6d"
+  },
+  "source_circuit_id": "604",
+  "statistics": {
+    "connection_count": 8,
+    "device_count": 2,
+    "device_type_counts": {
+      "npn": 2
+    },
+    "duplicate_source_instance_count": 0,
+    "external_port_count": 3,
+    "net_count": 4,
+    "unknown_device_type_count": 0,
+    "unreferenced_port_count": 0
+  }
+}

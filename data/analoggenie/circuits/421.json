@@ -1,0 +1,177 @@
+{
+  "circuit_id": "analoggenie:421",
+  "dataset": "AnalogGenie",
+  "devices": [
+    {
+      "canonical_type": "nmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:421:net:VDD",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:421:net:IB2",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:421:net:IB1",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:421:net:VSS",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:421:device:000001",
+      "ordinal": 1,
+      "parameters": {},
+      "raw_line": "M1 (VDD IB2 IB1 VSS) nmos4",
+      "raw_type": "nmos4",
+      "source_instance": "M1",
+      "source_line": 1
+    },
+    {
+      "canonical_type": "nmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:421:net:IB2",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:421:net:VB1",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:421:net:IB1",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:421:net:VSS",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:421:device:000002",
+      "ordinal": 2,
+      "parameters": {},
+      "raw_line": "M0 (IB2 VB1 IB1 VSS) nmos4",
+      "raw_type": "nmos4",
+      "source_instance": "M0",
+      "source_line": 2
+    }
+  ],
+  "issues": [],
+  "nets": [
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:421:net:VDD",
+      "is_external": true,
+      "name": "VDD",
+      "port_ordinal": 0
+    },
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:421:net:IB2",
+      "is_external": true,
+      "name": "IB2",
+      "port_ordinal": 4
+    },
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:421:net:IB1",
+      "is_external": true,
+      "name": "IB1",
+      "port_ordinal": 3
+    },
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:421:net:VSS",
+      "is_external": true,
+      "name": "VSS",
+      "port_ordinal": 1
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:421:net:VB1",
+      "is_external": true,
+      "name": "VB1",
+      "port_ordinal": 2
+    }
+  ],
+  "parser": {
+    "mode": "strict",
+    "name": "analoggenie",
+    "version": "1.0.0"
+  },
+  "ports": [
+    {
+      "name": "VDD",
+      "net_id": "analoggenie:421:net:VDD",
+      "ordinal": 0,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VSS",
+      "net_id": "analoggenie:421:net:VSS",
+      "ordinal": 1,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VB1",
+      "net_id": "analoggenie:421:net:VB1",
+      "ordinal": 2,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "IB1",
+      "net_id": "analoggenie:421:net:IB1",
+      "ordinal": 3,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "IB2",
+      "net_id": "analoggenie:421:net:IB2",
+      "ordinal": 4,
+      "referenced_by_device": true,
+      "role": null
+    }
+  ],
+  "schema_version": "1.0.0",
+  "source": {
+    "auxiliary_files": [
+      "Dataset/421/Book421.png",
+      "Dataset/421/Cadence421.png",
+      "Dataset/421/Pagenumber421.txt"
+    ],
+    "port_file": "Dataset/421/Port421.txt",
+    "port_sha256": "de0b21bdd67ca02d7c9e818935e8cd093399c4d9a741f711501cbf172106605a",
+    "primary_netlist": "Dataset/421/421.cir",
+    "primary_sha256": "a157ae6222b4585d65f4b3332e2c9f6a3fbdd12312d399f081052b1afa672169"
+  },
+  "source_circuit_id": "421",
+  "statistics": {
+    "connection_count": 8,
+    "device_count": 2,
+    "device_type_counts": {
+      "nmos": 2
+    },
+    "duplicate_source_instance_count": 0,
+    "external_port_count": 5,
+    "net_count": 5,
+    "unknown_device_type_count": 0,
+    "unreferenced_port_count": 0
+  }
+}

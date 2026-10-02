@@ -1,0 +1,163 @@
+{
+  "circuit_id": "analoggenie:1021",
+  "dataset": "AnalogGenie",
+  "devices": [
+    {
+      "canonical_type": "pmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:1021:net:VSS",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:1021:net:VDD",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:1021:net:IOUT1",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:1021:net:IIN1",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:1021:device:000001",
+      "ordinal": 1,
+      "parameters": {},
+      "raw_line": "M1 (VSS VDD IOUT1 IIN1) pmos4",
+      "raw_type": "pmos4",
+      "source_instance": "M1",
+      "source_line": 1
+    },
+    {
+      "canonical_type": "pmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:1021:net:VSS",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:1021:net:VDD",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:1021:net:IIN1",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:1021:net:IIN1",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:1021:device:000002",
+      "ordinal": 2,
+      "parameters": {},
+      "raw_line": "M0 (VSS VDD IIN1 IIN1) pmos4",
+      "raw_type": "pmos4",
+      "source_instance": "M0",
+      "source_line": 2
+    }
+  ],
+  "issues": [],
+  "nets": [
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:1021:net:VSS",
+      "is_external": true,
+      "name": "VSS",
+      "port_ordinal": 1
+    },
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:1021:net:VDD",
+      "is_external": true,
+      "name": "VDD",
+      "port_ordinal": 0
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:1021:net:IOUT1",
+      "is_external": true,
+      "name": "IOUT1",
+      "port_ordinal": 3
+    },
+    {
+      "degree_by_terminal": 3,
+      "id": "analoggenie:1021:net:IIN1",
+      "is_external": true,
+      "name": "IIN1",
+      "port_ordinal": 2
+    }
+  ],
+  "parser": {
+    "mode": "strict",
+    "name": "analoggenie",
+    "version": "1.0.0"
+  },
+  "ports": [
+    {
+      "name": "VDD",
+      "net_id": "analoggenie:1021:net:VDD",
+      "ordinal": 0,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VSS",
+      "net_id": "analoggenie:1021:net:VSS",
+      "ordinal": 1,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "IIN1",
+      "net_id": "analoggenie:1021:net:IIN1",
+      "ordinal": 2,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "IOUT1",
+      "net_id": "analoggenie:1021:net:IOUT1",
+      "ordinal": 3,
+      "referenced_by_device": true,
+      "role": null
+    }
+  ],
+  "schema_version": "1.0.0",
+  "source": {
+    "auxiliary_files": [
+      "Dataset/1021/Book1021.png",
+      "Dataset/1021/Cadence1021.png",
+      "Dataset/1021/Pagenumber1021.txt"
+    ],
+    "port_file": "Dataset/1021/Port1021.txt",
+    "port_sha256": "5bcae8088ace74b5504c75bfc39f2287eb2fcde4d36b87bf543584fcf5e39b82",
+    "primary_netlist": "Dataset/1021/1021.cir",
+    "primary_sha256": "c7468078e9e58c4acf2ca04d28a0ae1b944f1f4d7b65da48e8f792739eb0ba99"
+  },
+  "source_circuit_id": "1021",
+  "statistics": {
+    "connection_count": 8,
+    "device_count": 2,
+    "device_type_counts": {
+      "pmos": 2
+    },
+    "duplicate_source_instance_count": 0,
+    "external_port_count": 4,
+    "net_count": 4,
+    "unknown_device_type_count": 0,
+    "unreferenced_port_count": 0
+  }
+}

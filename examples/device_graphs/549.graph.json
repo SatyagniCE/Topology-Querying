@@ -1,0 +1,464 @@
+{
+  "converter_version": "gnn-pruning-device-graph/1.0.0",
+  "edges": [
+    {
+      "dst": "R0",
+      "dst_terminal": "positive",
+      "net": "net11",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "C1",
+      "src_terminal": "positive"
+    },
+    {
+      "dst": "I4/M1",
+      "dst_terminal": "gate",
+      "net": "LOGICQA1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I4/M0",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "I4/M1",
+      "dst_terminal": "drain",
+      "net": "net13",
+      "net_role": "signal",
+      "parallel_index": 1,
+      "src": "I4/M0",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M2",
+      "dst_terminal": "gate",
+      "net": "net13",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I4/M0",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "I4/M0",
+      "dst_terminal": "gate",
+      "net": "LOGICQA1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I4/M1",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "I4/M0",
+      "dst_terminal": "drain",
+      "net": "net13",
+      "net_role": "signal",
+      "parallel_index": 1,
+      "src": "I4/M1",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M2",
+      "dst_terminal": "gate",
+      "net": "net13",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I4/M1",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M1",
+      "dst_terminal": "drain",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M0",
+      "src_terminal": "source"
+    },
+    {
+      "dst": "M2",
+      "dst_terminal": "drain",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M0",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "R0",
+      "dst_terminal": "negative",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M0",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M0",
+      "dst_terminal": "source",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M1",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "I4/M0",
+      "dst_terminal": "drain",
+      "net": "net13",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M2",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "I4/M1",
+      "dst_terminal": "drain",
+      "net": "net13",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M2",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M0",
+      "dst_terminal": "drain",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M2",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M3",
+      "dst_terminal": "drain",
+      "net": "net10",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M2",
+      "src_terminal": "source"
+    },
+    {
+      "dst": "R0",
+      "dst_terminal": "negative",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M2",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M2",
+      "dst_terminal": "source",
+      "net": "net10",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M3",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "C1",
+      "dst_terminal": "positive",
+      "net": "net11",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "R0",
+      "src_terminal": "positive"
+    },
+    {
+      "dst": "M0",
+      "dst_terminal": "drain",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "R0",
+      "src_terminal": "negative"
+    },
+    {
+      "dst": "M2",
+      "dst_terminal": "drain",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "R0",
+      "src_terminal": "negative"
+    }
+  ],
+  "graph_schema_version": 1,
+  "nodes": [
+    {
+      "fixed_attributes": [],
+      "id": "C1",
+      "interface_flags": [
+        "gnd"
+      ],
+      "kind": "capacitor",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "positive",
+          "net11"
+        ],
+        [
+          "negative",
+          "VSS"
+        ]
+      ],
+      "terminal_roles": [
+        "positive",
+        "negative"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "I4/M0",
+      "interface_flags": [
+        "vdd"
+      ],
+      "kind": "pmos",
+      "terminal_equivalence": [
+        [
+          "body",
+          "source"
+        ]
+      ],
+      "terminal_nets": [
+        [
+          "drain",
+          "net13"
+        ],
+        [
+          "gate",
+          "LOGICQA1"
+        ],
+        [
+          "source",
+          "VDD"
+        ],
+        [
+          "body",
+          "VDD"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "I4/M1",
+      "interface_flags": [
+        "gnd"
+      ],
+      "kind": "nmos",
+      "terminal_equivalence": [
+        [
+          "body",
+          "source"
+        ]
+      ],
+      "terminal_nets": [
+        [
+          "drain",
+          "net13"
+        ],
+        [
+          "gate",
+          "LOGICQA1"
+        ],
+        [
+          "source",
+          "VSS"
+        ],
+        [
+          "body",
+          "VSS"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "M0",
+      "interface_flags": [
+        "gnd"
+      ],
+      "kind": "nmos",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "drain",
+          "VCONT1"
+        ],
+        [
+          "gate",
+          "LOGICQB1"
+        ],
+        [
+          "source",
+          "net7"
+        ],
+        [
+          "body",
+          "VSS"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "M1",
+      "interface_flags": [
+        "gnd"
+      ],
+      "kind": "nmos",
+      "terminal_equivalence": [
+        [
+          "body",
+          "source"
+        ]
+      ],
+      "terminal_nets": [
+        [
+          "drain",
+          "net7"
+        ],
+        [
+          "gate",
+          "VB1"
+        ],
+        [
+          "source",
+          "VSS"
+        ],
+        [
+          "body",
+          "VSS"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "M2",
+      "interface_flags": [
+        "vdd"
+      ],
+      "kind": "pmos",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "drain",
+          "VCONT1"
+        ],
+        [
+          "gate",
+          "net13"
+        ],
+        [
+          "source",
+          "net10"
+        ],
+        [
+          "body",
+          "VDD"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "M3",
+      "interface_flags": [
+        "vdd"
+      ],
+      "kind": "pmos",
+      "terminal_equivalence": [
+        [
+          "body",
+          "source"
+        ]
+      ],
+      "terminal_nets": [
+        [
+          "drain",
+          "net10"
+        ],
+        [
+          "gate",
+          "VB2"
+        ],
+        [
+          "source",
+          "VDD"
+        ],
+        [
+          "body",
+          "VDD"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "R0",
+      "interface_flags": [],
+      "kind": "resistor",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "positive",
+          "net11"
+        ],
+        [
+          "negative",
+          "VCONT1"
+        ]
+      ],
+      "terminal_roles": [
+        "positive",
+        "negative"
+      ],
+      "tunable_kinds": []
+    }
+  ],
+  "rail_nets": [
+    "0",
+    "GND",
+    "VDD",
+    "VSS"
+  ]
+}

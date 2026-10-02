@@ -1,0 +1,130 @@
+{
+  "circuit_id": "analoggenie:666",
+  "dataset": "AnalogGenie",
+  "devices": [
+    {
+      "canonical_type": "diode",
+      "category": "passive",
+      "connections": [
+        {
+          "net_id": "analoggenie:666:net:VSS",
+          "terminal": "p",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:666:net:VOUT1",
+          "terminal": "n",
+          "terminal_ordinal": 1
+        }
+      ],
+      "id": "analoggenie:666:device:000001",
+      "ordinal": 1,
+      "parameters": {},
+      "raw_line": "D0 (VSS VOUT1) diode",
+      "raw_type": "diode",
+      "source_instance": "D0",
+      "source_line": 1
+    },
+    {
+      "canonical_type": "resistor",
+      "category": "passive",
+      "connections": [
+        {
+          "net_id": "analoggenie:666:net:VIN1",
+          "terminal": "p",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:666:net:VOUT1",
+          "terminal": "n",
+          "terminal_ordinal": 1
+        }
+      ],
+      "id": "analoggenie:666:device:000002",
+      "ordinal": 2,
+      "parameters": {},
+      "raw_line": "R0 (VIN1 VOUT1) resistor",
+      "raw_type": "resistor",
+      "source_instance": "R0",
+      "source_line": 2
+    }
+  ],
+  "issues": [],
+  "nets": [
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:666:net:VSS",
+      "is_external": true,
+      "name": "VSS",
+      "port_ordinal": 0
+    },
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:666:net:VOUT1",
+      "is_external": true,
+      "name": "VOUT1",
+      "port_ordinal": 2
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:666:net:VIN1",
+      "is_external": true,
+      "name": "VIN1",
+      "port_ordinal": 1
+    }
+  ],
+  "parser": {
+    "mode": "strict",
+    "name": "analoggenie",
+    "version": "1.0.0"
+  },
+  "ports": [
+    {
+      "name": "VSS",
+      "net_id": "analoggenie:666:net:VSS",
+      "ordinal": 0,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VIN1",
+      "net_id": "analoggenie:666:net:VIN1",
+      "ordinal": 1,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VOUT1",
+      "net_id": "analoggenie:666:net:VOUT1",
+      "ordinal": 2,
+      "referenced_by_device": true,
+      "role": null
+    }
+  ],
+  "schema_version": "1.0.0",
+  "source": {
+    "auxiliary_files": [
+      "Dataset/666/Book666.png",
+      "Dataset/666/Cadence666.png",
+      "Dataset/666/Pagenumber666.txt"
+    ],
+    "port_file": "Dataset/666/Port666.txt",
+    "port_sha256": "c1a9fb2ca97fcec3c87ecd448b6e0df457b5cc67a9ee2c8054014f4988859695",
+    "primary_netlist": "Dataset/666/666.cir",
+    "primary_sha256": "04c441d6608e487a2c4986cd8464ab08c22ff44559c86204e715f6c467f45f0d"
+  },
+  "source_circuit_id": "666",
+  "statistics": {
+    "connection_count": 4,
+    "device_count": 2,
+    "device_type_counts": {
+      "diode": 1,
+      "resistor": 1
+    },
+    "duplicate_source_instance_count": 0,
+    "external_port_count": 3,
+    "net_count": 3,
+    "unknown_device_type_count": 0,
+    "unreferenced_port_count": 0
+  }
+}

@@ -1,0 +1,516 @@
+{
+  "converter_version": "gnn-pruning-device-graph/1.0.0",
+  "edges": [
+    {
+      "dst": "I0/M1",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I0/M0",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "I0/M1",
+      "dst_terminal": "drain",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 1,
+      "src": "I0/M0",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M0",
+      "dst_terminal": "gate",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I0/M0",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M1",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I0/M0",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M2",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I0/M0",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M3",
+      "dst_terminal": "gate",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I0/M0",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "I0/M0",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I0/M1",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "I0/M0",
+      "dst_terminal": "drain",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 1,
+      "src": "I0/M1",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M0",
+      "dst_terminal": "gate",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I0/M1",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M1",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I0/M1",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M2",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I0/M1",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M3",
+      "dst_terminal": "gate",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "I0/M1",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "I0/M0",
+      "dst_terminal": "drain",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M0",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "I0/M1",
+      "dst_terminal": "drain",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M0",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M1",
+      "dst_terminal": "source",
+      "net": "VCLK1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M0",
+      "src_terminal": "source"
+    },
+    {
+      "dst": "M2",
+      "dst_terminal": "drain",
+      "net": "VCLK4",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M0",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M3",
+      "dst_terminal": "gate",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M0",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "I0/M0",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M1",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "I0/M1",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M1",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M0",
+      "dst_terminal": "source",
+      "net": "VCLK1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M1",
+      "src_terminal": "source"
+    },
+    {
+      "dst": "M2",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M1",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M3",
+      "dst_terminal": "drain",
+      "net": "VCLK3",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M1",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "I0/M0",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M2",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "I0/M1",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M2",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M0",
+      "dst_terminal": "drain",
+      "net": "VCLK4",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M2",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M1",
+      "dst_terminal": "gate",
+      "net": "VCONT1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M2",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M3",
+      "dst_terminal": "source",
+      "net": "VCLK2",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M2",
+      "src_terminal": "source"
+    },
+    {
+      "dst": "I0/M0",
+      "dst_terminal": "drain",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M3",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "I0/M1",
+      "dst_terminal": "drain",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M3",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M0",
+      "dst_terminal": "gate",
+      "net": "net7",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M3",
+      "src_terminal": "gate"
+    },
+    {
+      "dst": "M1",
+      "dst_terminal": "drain",
+      "net": "VCLK3",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M3",
+      "src_terminal": "drain"
+    },
+    {
+      "dst": "M2",
+      "dst_terminal": "source",
+      "net": "VCLK2",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "M3",
+      "src_terminal": "source"
+    }
+  ],
+  "graph_schema_version": 1,
+  "nodes": [
+    {
+      "fixed_attributes": [],
+      "id": "I0/M0",
+      "interface_flags": [
+        "vdd"
+      ],
+      "kind": "pmos",
+      "terminal_equivalence": [
+        [
+          "body",
+          "source"
+        ]
+      ],
+      "terminal_nets": [
+        [
+          "drain",
+          "net7"
+        ],
+        [
+          "gate",
+          "VCONT1"
+        ],
+        [
+          "source",
+          "VDD"
+        ],
+        [
+          "body",
+          "VDD"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "I0/M1",
+      "interface_flags": [
+        "gnd"
+      ],
+      "kind": "nmos",
+      "terminal_equivalence": [
+        [
+          "body",
+          "source"
+        ]
+      ],
+      "terminal_nets": [
+        [
+          "drain",
+          "net7"
+        ],
+        [
+          "gate",
+          "VCONT1"
+        ],
+        [
+          "source",
+          "VSS"
+        ],
+        [
+          "body",
+          "VSS"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "M0",
+      "interface_flags": [
+        "gnd"
+      ],
+      "kind": "nmos",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "drain",
+          "VCLK4"
+        ],
+        [
+          "gate",
+          "net7"
+        ],
+        [
+          "source",
+          "VCLK1"
+        ],
+        [
+          "body",
+          "VSS"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "M1",
+      "interface_flags": [
+        "gnd"
+      ],
+      "kind": "nmos",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "drain",
+          "VCLK3"
+        ],
+        [
+          "gate",
+          "VCONT1"
+        ],
+        [
+          "source",
+          "VCLK1"
+        ],
+        [
+          "body",
+          "VSS"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "M2",
+      "interface_flags": [
+        "gnd"
+      ],
+      "kind": "nmos",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "drain",
+          "VCLK4"
+        ],
+        [
+          "gate",
+          "VCONT1"
+        ],
+        [
+          "source",
+          "VCLK2"
+        ],
+        [
+          "body",
+          "VSS"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "M3",
+      "interface_flags": [
+        "gnd"
+      ],
+      "kind": "nmos",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "drain",
+          "VCLK3"
+        ],
+        [
+          "gate",
+          "net7"
+        ],
+        [
+          "source",
+          "VCLK2"
+        ],
+        [
+          "body",
+          "VSS"
+        ]
+      ],
+      "terminal_roles": [
+        "drain",
+        "gate",
+        "source",
+        "body"
+      ],
+      "tunable_kinds": []
+    }
+  ],
+  "rail_nets": [
+    "0",
+    "GND",
+    "VDD",
+    "VSS"
+  ]
+}

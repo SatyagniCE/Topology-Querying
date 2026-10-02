@@ -1,6 +1,59 @@
 # Topology Querying
 
-A small Python library for converting supported analog `.cir` netlists into deterministic, terminal-aware device graphs. It parses device instances and subcircuit calls, maps netlist device names to graph types, assigns explicit rail and net roles, and writes versioned graph JSON. The conversion code uses only the Python standard library.
+Parse AnalogGenie circuits, store and query their topology in Neo4j, build
+NetworkX graphs, and inspect every circuit in a browser. This repository includes
+the validated 3,350-circuit canonical snapshot in `data/analoggenie` and 3,350
+offline HTML graph views in `visualizations`. The raw AnalogGenie source is pinned
+as a Git submodule; it is only needed when regenerating the canonical snapshot.
+
+## Quick start on a fresh machine
+
+The automated setup targets **Ubuntu 24.04 x86_64** with internet access and
+an account that can use `sudo`. Python, Java, and Neo4j need not be installed.
+Install Git, clone this repository, then run the setup script:
+
+```bash
+sudo apt-get update && sudo apt-get install -y git
+git clone --recurse-submodules https://github.com/SatyagniCE/Topology-Querying.git
+cd Topology-Querying
+bash scripts/setup-ubuntu.sh
+bash scripts/run-local.sh
+```
+
+Leave `run-local.sh` open. Browse the [circuit index](http://127.0.0.1:8765/)
+or open `visualizations/index.html` directly without running a server. Open
+[Neo4j Browser](http://127.0.0.1:7474/) to query the database. Connect to
+`bolt://127.0.0.1:7687`, database `neo4j`, user `neo4j`; find the generated
+password in `~/.config/query-retrieve/neo4j.env` on your own machine.
+
+Paste `queries/shared-emitter-npn.cypher` into Neo4j Browser for a topology
+query that includes a `graph_url` column. Open that URL to inspect the full
+NetworkX graph for a matching circuit. For a known ID, use
+`http://127.0.0.1:8765/analoggenie_1060.html`.
+
+Setup imports the committed canonical JSON into a private local Neo4j instance
+and builds the NetworkX cache under `output/networkx`. It skips the import when
+the database already matches the committed audit report. Neo4j persists data on
+disk across restarts; it does not need to be repopulated each time. The runtime,
+credentials, virtual environment, and NetworkX pickle cache remain local.
+
+## Repository layout
+
+| Path | Contents |
+| --- | --- |
+| `data/analoggenie/` | Canonical JSON for all circuits, manifest, audit, and schema |
+| `visualizations/` | Searchable index and one HTML graph per circuit |
+| `src/circuit_ingest/` | Parser, Neo4j storage, NetworkX cache, HTML exporter |
+| `src/gnn_pruning/` | General netlist conversion and device graph viewer |
+| `queries/` | Example Cypher with graph links |
+| `scripts/` | Fresh-machine setup and local runtime commands |
+| `examples/` | Earlier graph/viewer examples |
+| `AnalogGenie/` | Pinned upstream submodule; fetch to reparse source data |
+
+Generated build outputs in `output/` are ignored by Git. To regenerate the
+committed HTML snapshot from canonical JSON, run
+`circuit-html --input-dir data/analoggenie --output-dir output/circuit_html`
+from an installed environment.
 
 ## Install and test
 
@@ -41,7 +94,7 @@ The folder command finds `graph.json` and `*.graph.json` files recursively and p
 
 ## AnalogGenie corpus
 
-The upstream [AnalogGenie](https://github.com/xz-group/AnalogGenie) corpus is included as a submodule at commit `efc25358939c6bedd247f28d3df61066964f3a90`. Clone with `git clone --recurse-submodules`, or run `git submodule update --init` after cloning. The library does not import AnalogGenie code.
+The upstream [AnalogGenie](https://github.com/xz-group/AnalogGenie) corpus is included as a submodule at commit `efc25358939c6bedd247f28d3df61066964f3a90`. Clone with `git clone --recurse-submodules`, or run `git submodule update --init` after cloning when you need to regenerate the committed data. The library does not import AnalogGenie code.
 
 The tests include a small checked-in `.cir` fixture and graph JSON fixtures; the full corpus is available for further conversion experiments.
 
@@ -67,7 +120,8 @@ circuit-ingest parse-analoggenie --dataset-root AnalogGenie/Dataset \
 `parse-analoggenie` writes `circuits/<id>.json`, `manifest.jsonl`, `issues.jsonl`,
 `audit-report.json`, and `canonical-circuit.schema.json` under the output
 directory. The circuit records and audit report are deterministic for the pinned
-source and parser version; generated files stay outside Git. `audit-analoggenie`
+source and parser version. The committed snapshot is under `data/analoggenie`;
+new runs under `output/` stay outside Git. `audit-analoggenie`
 validates without writing circuit files;
 pass `--report-path path/to/report.json` to save its summary. Both commands
 accept `--source-commit` for source provenance.
@@ -130,16 +184,15 @@ report the system Java 8. The status command and HTTP request must succeed.
 
 ## Store canonical circuits in Neo4j
 
-Run the parser generation step above first. It creates both the circuit JSON
-files and their matching audit report in `output/analoggenie`. Then export the
-local connection settings and import the generated files:
+The committed `data/analoggenie` directory contains both the circuit JSON files
+and their matching audit report. Export the local connection settings and import:
 
 ```bash
 python -m pip install -e '.[neo4j,test]'
 set -a
 source ~/.config/query-retrieve/neo4j.env
 set +a
-circuit-neo4j import --input-dir output/analoggenie
+circuit-neo4j import --input-dir data/analoggenie
 ```
 
 The command creates ID constraints before writing, replaces each circuit in
@@ -163,7 +216,7 @@ After loading the full corpus, compare the database with the current parser
 audit report:
 
 ```bash
-circuit-neo4j audit --report output/analoggenie/audit-report.json
+circuit-neo4j audit --report data/analoggenie/audit-report.json
 NEO4J_TEST_REQUIRED=1 NEO4J_CORPUS_TEST=1 python -m pytest -q
 ```
 
@@ -174,13 +227,12 @@ connection/report error; the command prints each mismatch to stderr.
 
 ## Cache canonical circuits as NetworkX graphs
 
-After generating `output/analoggenie` with the parser command above, build a
-separate directed multigraph for each circuit:
+Build a separate directed multigraph for each committed circuit:
 
 ```bash
-circuit-networkx build --input-dir output/analoggenie --output-dir output/networkx
+circuit-networkx build --input-dir data/analoggenie --output-dir output/networkx
 circuit-networkx audit --output-dir output/networkx \
-  --report output/analoggenie/audit-report.json
+  --report data/analoggenie/audit-report.json
 ```
 
 Load a single graph by its canonical ID without a Neo4j connection:

@@ -1,0 +1,201 @@
+{
+  "circuit_id": "analoggenie:825",
+  "dataset": "AnalogGenie",
+  "devices": [
+    {
+      "canonical_type": "npn",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:825:net:VDD",
+          "terminal": "collector",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:825:net:VIN1",
+          "terminal": "base",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:825:net:net2",
+          "terminal": "emitter",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:825:net:0",
+          "terminal": "substrate",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:825:device:000001",
+      "ordinal": 1,
+      "parameters": {},
+      "raw_line": "Q0 (VDD VIN1 net2 0) npn",
+      "raw_type": "npn",
+      "source_instance": "Q0",
+      "source_line": 1
+    },
+    {
+      "canonical_type": "npn",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:825:net:VDD",
+          "terminal": "collector",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:825:net:net2",
+          "terminal": "base",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:825:net:IOUT1",
+          "terminal": "emitter",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:825:net:0",
+          "terminal": "substrate",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:825:device:000002",
+      "ordinal": 2,
+      "parameters": {},
+      "raw_line": "Q1 (VDD net2 IOUT1 0) npn",
+      "raw_type": "npn",
+      "source_instance": "Q1",
+      "source_line": 2
+    },
+    {
+      "canonical_type": "resistor",
+      "category": "passive",
+      "connections": [
+        {
+          "net_id": "analoggenie:825:net:net2",
+          "terminal": "p",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:825:net:VSS",
+          "terminal": "n",
+          "terminal_ordinal": 1
+        }
+      ],
+      "id": "analoggenie:825:device:000003",
+      "ordinal": 3,
+      "parameters": {},
+      "raw_line": "R0 (net2 VSS) resistor",
+      "raw_type": "resistor",
+      "source_instance": "R0",
+      "source_line": 3
+    }
+  ],
+  "issues": [],
+  "nets": [
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:825:net:VDD",
+      "is_external": true,
+      "name": "VDD",
+      "port_ordinal": 0
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:825:net:VIN1",
+      "is_external": true,
+      "name": "VIN1",
+      "port_ordinal": 2
+    },
+    {
+      "degree_by_terminal": 3,
+      "id": "analoggenie:825:net:net2",
+      "is_external": false,
+      "name": "net2",
+      "port_ordinal": null
+    },
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:825:net:0",
+      "is_external": false,
+      "name": "0",
+      "port_ordinal": null
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:825:net:IOUT1",
+      "is_external": true,
+      "name": "IOUT1",
+      "port_ordinal": 3
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:825:net:VSS",
+      "is_external": true,
+      "name": "VSS",
+      "port_ordinal": 1
+    }
+  ],
+  "parser": {
+    "mode": "strict",
+    "name": "analoggenie",
+    "version": "1.0.0"
+  },
+  "ports": [
+    {
+      "name": "VDD",
+      "net_id": "analoggenie:825:net:VDD",
+      "ordinal": 0,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VSS",
+      "net_id": "analoggenie:825:net:VSS",
+      "ordinal": 1,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VIN1",
+      "net_id": "analoggenie:825:net:VIN1",
+      "ordinal": 2,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "IOUT1",
+      "net_id": "analoggenie:825:net:IOUT1",
+      "ordinal": 3,
+      "referenced_by_device": true,
+      "role": null
+    }
+  ],
+  "schema_version": "1.0.0",
+  "source": {
+    "auxiliary_files": [
+      "Dataset/825/Book825.png",
+      "Dataset/825/Cadence825.png",
+      "Dataset/825/Pagenumber825.txt"
+    ],
+    "port_file": "Dataset/825/Port825.txt",
+    "port_sha256": "c6c6d4fd8c6867b23f5380d6774b47a6cc02730b01b974e019455a1683ef536d",
+    "primary_netlist": "Dataset/825/825.cir",
+    "primary_sha256": "3601e473b77bcefec5c76d92836c8894d8bf028c0d912fec835286fac7443956"
+  },
+  "source_circuit_id": "825",
+  "statistics": {
+    "connection_count": 10,
+    "device_count": 3,
+    "device_type_counts": {
+      "npn": 2,
+      "resistor": 1
+    },
+    "duplicate_source_instance_count": 0,
+    "external_port_count": 4,
+    "net_count": 6,
+    "unknown_device_type_count": 0,
+    "unreferenced_port_count": 0
+  }
+}

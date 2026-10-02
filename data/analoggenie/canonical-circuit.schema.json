@@ -1,0 +1,432 @@
+{
+  "$defs": {
+    "Connection": {
+      "additionalProperties": false,
+      "properties": {
+        "net_id": {
+          "title": "Net Id",
+          "type": "string"
+        },
+        "terminal": {
+          "title": "Terminal",
+          "type": "string"
+        },
+        "terminal_ordinal": {
+          "title": "Terminal Ordinal",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "terminal",
+        "terminal_ordinal",
+        "net_id"
+      ],
+      "title": "Connection",
+      "type": "object"
+    },
+    "DeviceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_type": {
+          "title": "Canonical Type",
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "transistor",
+            "passive",
+            "macro",
+            "opaque"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "connections": {
+          "items": {
+            "$ref": "#/$defs/Connection"
+          },
+          "title": "Connections",
+          "type": "array"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "ordinal": {
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "parameters": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Parameters",
+          "type": "object"
+        },
+        "raw_line": {
+          "title": "Raw Line",
+          "type": "string"
+        },
+        "raw_type": {
+          "title": "Raw Type",
+          "type": "string"
+        },
+        "source_instance": {
+          "title": "Source Instance",
+          "type": "string"
+        },
+        "source_line": {
+          "title": "Source Line",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "ordinal",
+        "source_instance",
+        "source_line",
+        "raw_type",
+        "canonical_type",
+        "category",
+        "connections",
+        "raw_line"
+      ],
+      "title": "DeviceRecord",
+      "type": "object"
+    },
+    "NetRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "degree_by_terminal": {
+          "title": "Degree By Terminal",
+          "type": "integer"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "is_external": {
+          "title": "Is External",
+          "type": "boolean"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "port_ordinal": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Port Ordinal"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "is_external",
+        "port_ordinal",
+        "degree_by_terminal"
+      ],
+      "title": "NetRecord",
+      "type": "object"
+    },
+    "ParseIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "context": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          },
+          "title": "Context",
+          "type": "object"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "info",
+            "warning",
+            "error",
+            "fatal"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "source_file": {
+          "title": "Source File",
+          "type": "string"
+        },
+        "source_line": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Line"
+        }
+      },
+      "required": [
+        "severity",
+        "code",
+        "message",
+        "source_file"
+      ],
+      "title": "ParseIssue",
+      "type": "object"
+    },
+    "ParseMode": {
+      "enum": [
+        "strict",
+        "lenient"
+      ],
+      "title": "ParseMode",
+      "type": "string"
+    },
+    "ParserRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "$ref": "#/$defs/ParseMode"
+        },
+        "name": {
+          "default": "analoggenie",
+          "title": "Name",
+          "type": "string"
+        },
+        "version": {
+          "default": "1.0.0",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "title": "ParserRecord",
+      "type": "object"
+    },
+    "PortRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "net_id": {
+          "title": "Net Id",
+          "type": "string"
+        },
+        "ordinal": {
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "referenced_by_device": {
+          "title": "Referenced By Device",
+          "type": "boolean"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        }
+      },
+      "required": [
+        "name",
+        "ordinal",
+        "net_id",
+        "referenced_by_device"
+      ],
+      "title": "PortRecord",
+      "type": "object"
+    },
+    "SourceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "auxiliary_files": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Auxiliary Files",
+          "type": "array"
+        },
+        "port_file": {
+          "title": "Port File",
+          "type": "string"
+        },
+        "port_sha256": {
+          "title": "Port Sha256",
+          "type": "string"
+        },
+        "primary_netlist": {
+          "title": "Primary Netlist",
+          "type": "string"
+        },
+        "primary_sha256": {
+          "title": "Primary Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "primary_netlist",
+        "port_file",
+        "primary_sha256",
+        "port_sha256",
+        "auxiliary_files"
+      ],
+      "title": "SourceRecord",
+      "type": "object"
+    },
+    "Statistics": {
+      "additionalProperties": false,
+      "properties": {
+        "connection_count": {
+          "title": "Connection Count",
+          "type": "integer"
+        },
+        "device_count": {
+          "title": "Device Count",
+          "type": "integer"
+        },
+        "device_type_counts": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Device Type Counts",
+          "type": "object"
+        },
+        "duplicate_source_instance_count": {
+          "title": "Duplicate Source Instance Count",
+          "type": "integer"
+        },
+        "external_port_count": {
+          "title": "External Port Count",
+          "type": "integer"
+        },
+        "net_count": {
+          "title": "Net Count",
+          "type": "integer"
+        },
+        "unknown_device_type_count": {
+          "title": "Unknown Device Type Count",
+          "type": "integer"
+        },
+        "unreferenced_port_count": {
+          "title": "Unreferenced Port Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "device_count",
+        "net_count",
+        "external_port_count",
+        "connection_count",
+        "device_type_counts",
+        "duplicate_source_instance_count",
+        "unreferenced_port_count",
+        "unknown_device_type_count"
+      ],
+      "title": "Statistics",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "circuit_id": {
+      "title": "Circuit Id",
+      "type": "string"
+    },
+    "dataset": {
+      "title": "Dataset",
+      "type": "string"
+    },
+    "devices": {
+      "items": {
+        "$ref": "#/$defs/DeviceRecord"
+      },
+      "title": "Devices",
+      "type": "array"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/ParseIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "nets": {
+      "items": {
+        "$ref": "#/$defs/NetRecord"
+      },
+      "title": "Nets",
+      "type": "array"
+    },
+    "parser": {
+      "$ref": "#/$defs/ParserRecord"
+    },
+    "ports": {
+      "items": {
+        "$ref": "#/$defs/PortRecord"
+      },
+      "title": "Ports",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/SourceRecord"
+    },
+    "source_circuit_id": {
+      "title": "Source Circuit Id",
+      "type": "string"
+    },
+    "statistics": {
+      "$ref": "#/$defs/Statistics"
+    }
+  },
+  "required": [
+    "parser",
+    "circuit_id",
+    "source_circuit_id",
+    "dataset",
+    "source",
+    "ports",
+    "nets",
+    "devices",
+    "statistics",
+    "issues"
+  ],
+  "title": "CircuitRecord",
+  "type": "object"
+}

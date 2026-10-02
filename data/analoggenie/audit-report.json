@@ -1,0 +1,60 @@
+{
+  "canonical_device_type_counts": {
+    "capacitor": 4584,
+    "diode": 245,
+    "inductor": 796,
+    "inverter": 52,
+    "nmos": 30908,
+    "npn": 951,
+    "pfd": 2,
+    "pmos": 25179,
+    "pnp": 989,
+    "resistor": 5870,
+    "transmission_gate": 61,
+    "xor": 2
+  },
+  "discovered_circuits": 3350,
+  "issue_counts": {
+    "DUPLICATE_SOURCE_INSTANCE": 13931,
+    "PORT_NOT_REFERENCED": 5,
+    "UNEXPECTED_FILE": 77
+  },
+  "manifest_sha256": "bb821847b4b97a27a93e4e29b1e621e132a0f1151a61b6aa2c8f090436c9de8b",
+  "parser_version": "1.0.0",
+  "raw_device_type_counts": {
+    "INVERTER": 52,
+    "PFD": 2,
+    "TRANSMISSION_GATE": 61,
+    "XOR": 2,
+    "capacitor": 4584,
+    "diode": 245,
+    "inductor": 796,
+    "nmos4": 30908,
+    "npn": 951,
+    "pmos4": 25179,
+    "pnp": 989,
+    "resistor": 5870
+  },
+  "schema_version": "1.0.0",
+  "source_repository_commit": "efc25358939c6bedd247f28d3df61066964f3a90",
+  "status_counts": {
+    "valid": 3346,
+    "valid_with_warnings": 4
+  },
+  "totals": {
+    "circuits_with_duplicate_source_instances": 2305,
+    "connections": 255633,
+    "devices": 69639,
+    "duplicate_source_instances": 13931,
+    "nets": 57124,
+    "ports": 24987
+  },
+  "unknown_types_and_arities": {},
+  "unreferenced_ports": [
+    "601:VLOGICA1",
+    "601:VLOGICB1",
+    "952:VREF1",
+    "957:IN2",
+    "1076:VCKL2"
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "circuit_id": "analoggenie:726",
+  "dataset": "AnalogGenie",
+  "devices": [
+    {
+      "canonical_type": "nmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:726:net:IB1",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:726:net:IB1",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:726:net:VSS",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:726:net:VSS",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:726:device:000001",
+      "ordinal": 1,
+      "parameters": {},
+      "raw_line": "M3 (IB1 IB1 VSS VSS) nmos4",
+      "raw_type": "nmos4",
+      "source_instance": "M3",
+      "source_line": 1
+    },
+    {
+      "canonical_type": "nmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:726:net:IOUT1",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:726:net:IB1",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:726:net:VSS",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:726:net:VSS",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:726:device:000002",
+      "ordinal": 2,
+      "parameters": {},
+      "raw_line": "M5 (IOUT1 IB1 VSS VSS) nmos4",
+      "raw_type": "nmos4",
+      "source_instance": "M5",
+      "source_line": 2
+    }
+  ],
+  "issues": [],
+  "nets": [
+    {
+      "degree_by_terminal": 3,
+      "id": "analoggenie:726:net:IB1",
+      "is_external": true,
+      "name": "IB1",
+      "port_ordinal": 1
+    },
+    {
+      "degree_by_terminal": 4,
+      "id": "analoggenie:726:net:VSS",
+      "is_external": true,
+      "name": "VSS",
+      "port_ordinal": 0
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:726:net:IOUT1",
+      "is_external": true,
+      "name": "IOUT1",
+      "port_ordinal": 2
+    }
+  ],
+  "parser": {
+    "mode": "strict",
+    "name": "analoggenie",
+    "version": "1.0.0"
+  },
+  "ports": [
+    {
+      "name": "VSS",
+      "net_id": "analoggenie:726:net:VSS",
+      "ordinal": 0,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "IB1",
+      "net_id": "analoggenie:726:net:IB1",
+      "ordinal": 1,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "IOUT1",
+      "net_id": "analoggenie:726:net:IOUT1",
+      "ordinal": 2,
+      "referenced_by_device": true,
+      "role": null
+    }
+  ],
+  "schema_version": "1.0.0",
+  "source": {
+    "auxiliary_files": [
+      "Dataset/726/Book726.png",
+      "Dataset/726/Cadence726.png",
+      "Dataset/726/Pagenumber726.txt"
+    ],
+    "port_file": "Dataset/726/Port726.txt",
+    "port_sha256": "1e8cde655784c237a937ca84deefb2ddf98d509d0deaf59d5d0758ef2b0b6431",
+    "primary_netlist": "Dataset/726/726.cir",
+    "primary_sha256": "4c22fdae85a3c70c1e8d0e603ab30c43e9b91ba6a5c671faab7d4ef2b5e7a8a1"
+  },
+  "source_circuit_id": "726",
+  "statistics": {
+    "connection_count": 8,
+    "device_count": 2,
+    "device_type_counts": {
+      "nmos": 2
+    },
+    "duplicate_source_instance_count": 0,
+    "external_port_count": 3,
+    "net_count": 3,
+    "unknown_device_type_count": 0,
+    "unreferenced_port_count": 0
+  }
+}

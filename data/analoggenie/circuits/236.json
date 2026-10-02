@@ -1,0 +1,168 @@
+{
+  "circuit_id": "analoggenie:236",
+  "dataset": "AnalogGenie",
+  "devices": [
+    {
+      "canonical_type": "nmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:236:net:VOUT1",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:236:net:VB1",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:236:net:IIN1",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:236:net:VSS",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:236:device:000001",
+      "ordinal": 1,
+      "parameters": {},
+      "raw_line": "M1 (VOUT1 VB1 IIN1 VSS) nmos4",
+      "raw_type": "nmos4",
+      "source_instance": "M1",
+      "source_line": 1
+    },
+    {
+      "canonical_type": "resistor",
+      "category": "passive",
+      "connections": [
+        {
+          "net_id": "analoggenie:236:net:VOUT1",
+          "terminal": "p",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:236:net:VDD",
+          "terminal": "n",
+          "terminal_ordinal": 1
+        }
+      ],
+      "id": "analoggenie:236:device:000002",
+      "ordinal": 2,
+      "parameters": {},
+      "raw_line": "R0 (VOUT1 VDD) resistor",
+      "raw_type": "resistor",
+      "source_instance": "R0",
+      "source_line": 2
+    }
+  ],
+  "issues": [],
+  "nets": [
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:236:net:VOUT1",
+      "is_external": true,
+      "name": "VOUT1",
+      "port_ordinal": 3
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:236:net:VB1",
+      "is_external": true,
+      "name": "VB1",
+      "port_ordinal": 4
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:236:net:IIN1",
+      "is_external": true,
+      "name": "IIN1",
+      "port_ordinal": 2
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:236:net:VSS",
+      "is_external": true,
+      "name": "VSS",
+      "port_ordinal": 1
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:236:net:VDD",
+      "is_external": true,
+      "name": "VDD",
+      "port_ordinal": 0
+    }
+  ],
+  "parser": {
+    "mode": "strict",
+    "name": "analoggenie",
+    "version": "1.0.0"
+  },
+  "ports": [
+    {
+      "name": "VDD",
+      "net_id": "analoggenie:236:net:VDD",
+      "ordinal": 0,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VSS",
+      "net_id": "analoggenie:236:net:VSS",
+      "ordinal": 1,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "IIN1",
+      "net_id": "analoggenie:236:net:IIN1",
+      "ordinal": 2,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VOUT1",
+      "net_id": "analoggenie:236:net:VOUT1",
+      "ordinal": 3,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VB1",
+      "net_id": "analoggenie:236:net:VB1",
+      "ordinal": 4,
+      "referenced_by_device": true,
+      "role": null
+    }
+  ],
+  "schema_version": "1.0.0",
+  "source": {
+    "auxiliary_files": [
+      "Dataset/236/Book236.png",
+      "Dataset/236/Cadence236.png",
+      "Dataset/236/Pagenumber236.txt"
+    ],
+    "port_file": "Dataset/236/Port236.txt",
+    "port_sha256": "92d83b5b5977dd825bbefdbc448ce9a6c011e1759c090f471d5f4801444dac30",
+    "primary_netlist": "Dataset/236/236.cir",
+    "primary_sha256": "7b85dc340130438647fc32a06dcc8e6032fab38014e71f3f7379acd4c12bafca"
+  },
+  "source_circuit_id": "236",
+  "statistics": {
+    "connection_count": 6,
+    "device_count": 2,
+    "device_type_counts": {
+      "nmos": 1,
+      "resistor": 1
+    },
+    "duplicate_source_instance_count": 0,
+    "external_port_count": 5,
+    "net_count": 5,
+    "unknown_device_type_count": 0,
+    "unreferenced_port_count": 0
+  }
+}

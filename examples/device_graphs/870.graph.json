@@ -1,0 +1,257 @@
+{
+  "converter_version": "gnn-pruning-device-graph/1.0.0",
+  "edges": [
+    {
+      "dst": "D1",
+      "dst_terminal": "anode",
+      "net": "net010",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "D0",
+      "src_terminal": "cathode"
+    },
+    {
+      "dst": "Q2",
+      "dst_terminal": "base",
+      "net": "IB1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "D0",
+      "src_terminal": "anode"
+    },
+    {
+      "dst": "D0",
+      "dst_terminal": "cathode",
+      "net": "net010",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "D1",
+      "src_terminal": "anode"
+    },
+    {
+      "dst": "Q0",
+      "dst_terminal": "base",
+      "net": "VB1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "D1",
+      "src_terminal": "cathode"
+    },
+    {
+      "dst": "D1",
+      "dst_terminal": "cathode",
+      "net": "VB1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "Q0",
+      "src_terminal": "base"
+    },
+    {
+      "dst": "Q2",
+      "dst_terminal": "emitter",
+      "net": "net8",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "Q0",
+      "src_terminal": "emitter"
+    },
+    {
+      "dst": "R3",
+      "dst_terminal": "positive",
+      "net": "net8",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "Q0",
+      "src_terminal": "emitter"
+    },
+    {
+      "dst": "D0",
+      "dst_terminal": "anode",
+      "net": "IB1",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "Q2",
+      "src_terminal": "base"
+    },
+    {
+      "dst": "Q0",
+      "dst_terminal": "emitter",
+      "net": "net8",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "Q2",
+      "src_terminal": "emitter"
+    },
+    {
+      "dst": "R3",
+      "dst_terminal": "positive",
+      "net": "net8",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "Q2",
+      "src_terminal": "emitter"
+    },
+    {
+      "dst": "Q0",
+      "dst_terminal": "emitter",
+      "net": "net8",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "R3",
+      "src_terminal": "positive"
+    },
+    {
+      "dst": "Q2",
+      "dst_terminal": "emitter",
+      "net": "net8",
+      "net_role": "signal",
+      "parallel_index": 0,
+      "src": "R3",
+      "src_terminal": "positive"
+    }
+  ],
+  "graph_schema_version": 1,
+  "nodes": [
+    {
+      "fixed_attributes": [],
+      "id": "D0",
+      "interface_flags": [],
+      "kind": "diode",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "anode",
+          "IB1"
+        ],
+        [
+          "cathode",
+          "net010"
+        ]
+      ],
+      "terminal_roles": [
+        "anode",
+        "cathode"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "D1",
+      "interface_flags": [],
+      "kind": "diode",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "anode",
+          "net010"
+        ],
+        [
+          "cathode",
+          "VB1"
+        ]
+      ],
+      "terminal_roles": [
+        "anode",
+        "cathode"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "Q0",
+      "interface_flags": [
+        "gnd"
+      ],
+      "kind": "pnp",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "collector",
+          "VSS"
+        ],
+        [
+          "base",
+          "VB1"
+        ],
+        [
+          "emitter",
+          "net8"
+        ],
+        [
+          "substrate",
+          "0"
+        ]
+      ],
+      "terminal_roles": [
+        "collector",
+        "base",
+        "emitter",
+        "substrate"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "Q2",
+      "interface_flags": [
+        "gnd",
+        "vdd"
+      ],
+      "kind": "npn",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "collector",
+          "VDD"
+        ],
+        [
+          "base",
+          "IB1"
+        ],
+        [
+          "emitter",
+          "net8"
+        ],
+        [
+          "substrate",
+          "0"
+        ]
+      ],
+      "terminal_roles": [
+        "collector",
+        "base",
+        "emitter",
+        "substrate"
+      ],
+      "tunable_kinds": []
+    },
+    {
+      "fixed_attributes": [],
+      "id": "R3",
+      "interface_flags": [],
+      "kind": "resistor",
+      "terminal_equivalence": [],
+      "terminal_nets": [
+        [
+          "positive",
+          "net8"
+        ],
+        [
+          "negative",
+          "VCM1"
+        ]
+      ],
+      "terminal_roles": [
+        "positive",
+        "negative"
+      ],
+      "tunable_kinds": []
+    }
+  ],
+  "rail_nets": [
+    "0",
+    "GND",
+    "VDD",
+    "VSS"
+  ]
+}

@@ -1,0 +1,6 @@
+data/analoggenie/circuits/*.json linguist-generated=true
+visualizations/*.html linguist-generated=true
+visualizations/assets/*.js linguist-vendored=true
+visualizations/assets/*.css linguist-vendored=true
+visualizations/** -whitespace
+examples/**/*.html -whitespace

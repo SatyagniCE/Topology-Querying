@@ -1,0 +1,154 @@
+{
+  "circuit_id": "analoggenie:385",
+  "dataset": "AnalogGenie",
+  "devices": [
+    {
+      "canonical_type": "nmos",
+      "category": "transistor",
+      "connections": [
+        {
+          "net_id": "analoggenie:385:net:VIN1",
+          "terminal": "drain",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:385:net:VCLK1",
+          "terminal": "gate",
+          "terminal_ordinal": 1
+        },
+        {
+          "net_id": "analoggenie:385:net:VOUT1",
+          "terminal": "source",
+          "terminal_ordinal": 2
+        },
+        {
+          "net_id": "analoggenie:385:net:VSS",
+          "terminal": "bulk",
+          "terminal_ordinal": 3
+        }
+      ],
+      "id": "analoggenie:385:device:000001",
+      "ordinal": 1,
+      "parameters": {},
+      "raw_line": "M0 (VIN1 VCLK1 VOUT1 VSS) nmos4",
+      "raw_type": "nmos4",
+      "source_instance": "M0",
+      "source_line": 1
+    },
+    {
+      "canonical_type": "capacitor",
+      "category": "passive",
+      "connections": [
+        {
+          "net_id": "analoggenie:385:net:VOUT1",
+          "terminal": "p",
+          "terminal_ordinal": 0
+        },
+        {
+          "net_id": "analoggenie:385:net:VSS",
+          "terminal": "n",
+          "terminal_ordinal": 1
+        }
+      ],
+      "id": "analoggenie:385:device:000002",
+      "ordinal": 2,
+      "parameters": {},
+      "raw_line": "C0 (VOUT1 VSS) capacitor",
+      "raw_type": "capacitor",
+      "source_instance": "C0",
+      "source_line": 2
+    }
+  ],
+  "issues": [],
+  "nets": [
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:385:net:VIN1",
+      "is_external": true,
+      "name": "VIN1",
+      "port_ordinal": 1
+    },
+    {
+      "degree_by_terminal": 1,
+      "id": "analoggenie:385:net:VCLK1",
+      "is_external": true,
+      "name": "VCLK1",
+      "port_ordinal": 3
+    },
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:385:net:VOUT1",
+      "is_external": true,
+      "name": "VOUT1",
+      "port_ordinal": 2
+    },
+    {
+      "degree_by_terminal": 2,
+      "id": "analoggenie:385:net:VSS",
+      "is_external": true,
+      "name": "VSS",
+      "port_ordinal": 0
+    }
+  ],
+  "parser": {
+    "mode": "strict",
+    "name": "analoggenie",
+    "version": "1.0.0"
+  },
+  "ports": [
+    {
+      "name": "VSS",
+      "net_id": "analoggenie:385:net:VSS",
+      "ordinal": 0,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VIN1",
+      "net_id": "analoggenie:385:net:VIN1",
+      "ordinal": 1,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VOUT1",
+      "net_id": "analoggenie:385:net:VOUT1",
+      "ordinal": 2,
+      "referenced_by_device": true,
+      "role": null
+    },
+    {
+      "name": "VCLK1",
+      "net_id": "analoggenie:385:net:VCLK1",
+      "ordinal": 3,
+      "referenced_by_device": true,
+      "role": null
+    }
+  ],
+  "schema_version": "1.0.0",
+  "source": {
+    "auxiliary_files": [
+      "Dataset/385/Book385.png",
+      "Dataset/385/Cadence385.png",
+      "Dataset/385/Pagenumber385.txt"
+    ],
+    "port_file": "Dataset/385/Port385.txt",
+    "port_sha256": "4d5f71a55ca646e93311bdf31cdd28a469acb7f83f6c024d3411b7306c6fe761",
+    "primary_netlist": "Dataset/385/385.cir",
+    "primary_sha256": "b284cf6e065e7e5bf3f7cb023d3f7995005272f84b3fc1afe70fc069f8b7aaa2"
+  },
+  "source_circuit_id": "385",
+  "statistics": {
+    "connection_count": 6,
+    "device_count": 2,
+    "device_type_counts": {
+      "capacitor": 1,
+      "nmos": 1
+    },
+    "duplicate_source_instance_count": 0,
+    "external_port_count": 4,
+    "net_count": 4,
+    "unknown_device_type_count": 0,
+    "unreferenced_port_count": 0
+  }
+}
