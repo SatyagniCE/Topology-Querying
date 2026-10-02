@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 from html import escape
+import json
 from pathlib import Path
 import re
 
@@ -98,7 +99,8 @@ def to_networkx(graph: DeviceGraph) -> nx.MultiDiGraph:
         # The pair-local index fans multiple nets apart on each side.
         result.add_edge(
             edge.src, edge.dst, key=edge.parallel_index,
-            id=f"{edge.src}|{edge.dst}|{edge.parallel_index}",
+            id=json.dumps([edge.src, edge.dst, edge.parallel_index],
+                          ensure_ascii=False, separators=(",", ":")),
             net=edge.net, label="",
             title=(f"{edge.net}: "
                    f"{edge.src}.{edge.src_terminal} ↔ "
@@ -198,6 +200,8 @@ def render_folder(source: Path, output: Path) -> list[Path]:
         relative = path.relative_to(source)
         if relative.name == "graph.json":
             name = "graph.html"
+        elif relative.name == "graph.graph.json":
+            name = "graph.graph.html"
         else:
             name = relative.name.removesuffix(".graph.json") + ".html"
         rendered.append(render_graph_file(path, output / relative.parent / name))

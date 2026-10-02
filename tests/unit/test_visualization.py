@@ -51,6 +51,24 @@ def test_networkx_keeps_all_directed_parallel_connections(tmp_path: Path):
     }
 
 
+def test_viewer_edge_ids_are_unique_when_device_names_contain_separator():
+    graph = build_device_graph(
+        parse_netlist(
+            "a|b (x 0) resistor\n"
+            "c (x 0) resistor\n"
+            "a (y 0) resistor\n"
+            "b|c (y 0) resistor",
+            {},
+        ),
+        TopologyAnnotations(),
+    )
+    visual = to_networkx(graph)
+    edge_ids = [data["id"] for _, _, data in visual.edges(data=True)]
+
+    assert len(edge_ids) == 4
+    assert len(set(edge_ids)) == 4
+
+
 def test_html_has_distinct_edges_rail_badges_and_inline_assets(tmp_path: Path):
     output = tmp_path / "circuit.html"
     render_graph_file(_sample_graph_path(tmp_path / "graph.json"), output)
@@ -106,3 +124,18 @@ def test_cli_single_and_batch_render_graph_json(tmp_path: Path):
     assert one.exists()
     assert (batch / "graph.html").exists()
     assert (batch / "nested" / "other.html").exists()
+
+
+def test_folder_render_keeps_graph_and_graph_graph_outputs_distinct(tmp_path: Path):
+    source = tmp_path / "source"
+    source.mkdir()
+    _sample_graph_path(source / "graph.json")
+    _sample_graph_path(source / "graph.graph.json")
+    output = tmp_path / "html"
+
+    from gnn_pruning.visualization.render import render_folder
+
+    rendered = render_folder(source, output)
+
+    assert {path.name for path in rendered} == {"graph.html", "graph.graph.html"}
+    assert all(path.is_file() for path in rendered)
