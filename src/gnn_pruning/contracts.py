@@ -88,6 +88,8 @@ class DeviceNode:
     interface_flags: tuple[str, ...] = ()
     fixed_attributes: tuple[tuple[str, float], ...] = ()
     tunable_kinds: tuple[str, ...] = ()
+    # Optional for compatibility with graph JSON written before terminal nets.
+    terminal_nets: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -166,6 +168,14 @@ class DeviceGraph:
                 raise ValueError(f"negative parallel index {edge.parallel_index}")
             if edge.net in rail_nets:
                 raise ValueError(f"rail net {edge.net} must not create an edge")
+            for endpoint, terminal in (
+                (edge.src, edge.src_terminal), (edge.dst, edge.dst_terminal)
+            ):
+                mapped = dict(nodes_by_id[endpoint].terminal_nets)
+                if mapped and mapped[terminal] != edge.net:
+                    raise ValueError(
+                        f"terminal net mismatch on {endpoint}.{terminal}"
+                    )
 
     @staticmethod
     def _validate_node(node: DeviceNode) -> None:
@@ -176,6 +186,18 @@ class DeviceGraph:
         for role in node.terminal_roles:
             if role not in TERMINAL_ROLES:
                 raise ValueError(f"unknown terminal role {role}")
+        if node.terminal_nets:
+            if len(node.terminal_nets) != len(node.terminal_roles):
+                raise ValueError(f"incomplete terminal net map on node {node.id}")
+            for role, item in zip(node.terminal_roles, node.terminal_nets, strict=True):
+                if (
+                    not isinstance(item, tuple)
+                    or len(item) != 2
+                    or item[0] != role
+                    or not isinstance(item[1], str)
+                    or not item[1]
+                ):
+                    raise ValueError(f"invalid terminal net map on node {node.id}")
         for first, second in node.terminal_equivalence:
             if first == second:
                 raise ValueError(f"terminal equivalence repeats {first}")

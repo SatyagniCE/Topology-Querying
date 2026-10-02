@@ -107,8 +107,7 @@ def build_device_graph(
         _record_terminal_equivalence(contacts, equivalences)
         if net in rail_flags:
             # Current model consumes device-level rail flags, not rail edges.
-            # The graph loses which terminal touched which rail; retain the
-            # parsed netlist if that exact connectivity is needed downstream.
+            # Exact rail contacts remain in each node's terminal_nets map.
             for device_id, _ in contacts:
                 node_flags[device_id].add(rail_flags[net])
             continue
@@ -236,6 +235,10 @@ def device_graph_to_dict(graph: DeviceGraph) -> dict[str, object]:
                 ],
                 "terminal_roles": list(node.terminal_roles),
                 "tunable_kinds": sorted(node.tunable_kinds),
+                **(
+                    {"terminal_nets": [list(item) for item in node.terminal_nets]}
+                    if node.terminal_nets else {}
+                ),
             }
             for node in sorted(graph.nodes, key=lambda node: node.id)
         ],
@@ -394,6 +397,7 @@ def _build_node(
         interface_flags=tuple(sorted(flags)),
         fixed_attributes=fixed_attributes,
         tunable_kinds=tunable_kinds,
+        terminal_nets=tuple(zip(instance.terminal_roles, instance.nets, strict=True)),
     )
 
 
@@ -424,19 +428,27 @@ def _node_from_dict(value: object) -> DeviceNode:
             "terminal_equivalence",
             "terminal_roles",
             "tunable_kinds",
-        },
+        } | ({"terminal_nets"} if "terminal_nets" in value else set()),
         "node",
     )
     fixed = _json_numeric_pairs(value, "fixed_attributes")
     equivalence = _json_string_pairs(value, "terminal_equivalence")
+    terminal_roles = tuple(_json_strings(value, "terminal_roles"))
+    terminal_nets = (
+        tuple(_json_string_pairs(value, "terminal_nets"))
+        if "terminal_nets" in value else ()
+    )
+    if "terminal_nets" in value and terminal_roles and not terminal_nets:
+        raise ValueError("incomplete terminal net map")
     return DeviceNode(
         id=_json_string(value, "id"),
         kind=_json_string(value, "kind"),
-        terminal_roles=tuple(_json_strings(value, "terminal_roles")),
+        terminal_roles=terminal_roles,
         terminal_equivalence=tuple(equivalence),
         interface_flags=tuple(_json_strings(value, "interface_flags")),
         fixed_attributes=tuple(fixed),
         tunable_kinds=tuple(_json_strings(value, "tunable_kinds")),
+        terminal_nets=terminal_nets,
     )
 
 
