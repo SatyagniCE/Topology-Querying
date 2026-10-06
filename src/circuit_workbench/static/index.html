@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#151713"><title>Circuit Atlas · Research workbench</title>
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/vendor/vis-network.css"><link rel="stylesheet" href="/static/app.css">
+  <script defer src="/static/vendor/vis-network.min.js"></script><script type="module" src="/static/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#library" aria-label="Circuit Atlas home"><svg width="29" height="29" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M3 16h7m12 0h7M10 8v16m4-12v8m4-16v24m4-16v8M18 4h8M18 28h8" stroke="currentColor" stroke-width="1.7"/></svg><span>Circuit <strong>Atlas</strong><small>ANALOG RESEARCH</small></span></a>
+    <nav aria-label="Main navigation"><a href="#library" id="nav-library">Library</a><a href="#query" id="nav-query">Query workbench</a></nav>
+    <div class="top-actions"><span class="local-label"><i></i> LOCAL WORKSPACE</span><button class="button primary small" id="open-upload">＋ Add circuit</button></div>
+  </header>
+  <main id="main" tabindex="-1"></main>
+  <footer class="app-footer"><span>CIRCUIT ATLAS <span class="muted">/</span> RESEARCH PREVIEW V1</span><button id="status-button" class="status-button"><i class="status-dot"></i><span id="system-status">Connecting…</span></button></footer>
+  <dialog id="upload-dialog" class="upload-dialog"><div id="upload-content"></div></dialog>
+  <dialog id="system-dialog" class="system-dialog"><div id="system-content"></div></dialog>
+  <dialog id="viewer-dialog" class="viewer-dialog" aria-label="Expanded circuit viewer"></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

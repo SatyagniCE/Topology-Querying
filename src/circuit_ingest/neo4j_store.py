@@ -29,6 +29,28 @@ def replace_circuit(driver: Driver, database: str, record: CircuitRecord) -> Non
         session.execute_write(_replace_circuit_tx, projection)
 
 
+def create_circuit_if_missing(driver: Driver, database: str, record: CircuitRecord) -> bool:
+    """Bootstrap absent circuits without replacing existing topology or annotations."""
+    projection = project_circuit(record)
+    with driver.session(database=database) as session:
+        return session.execute_write(_create_missing_tx, projection)
+
+
+def _create_missing_tx(tx: ManagedTransaction, projection: CircuitProjection) -> bool:
+    exists = tx.run("MATCH (c:Circuit {id:$id}) RETURN count(c) AS n",
+                    id=projection.circuit_id).single()
+    if exists["n"]:
+        return False
+    tx.run("""
+        CREATE (c:Circuit {id:$id, dataset:$dataset,
+                           schema_version:$schema_version, record_json:$record_json})
+    """, id=projection.circuit_id, dataset=projection.dataset,
+           schema_version=projection.schema_version,
+           record_json=projection.record_json).consume()
+    _create_projected_subgraph(tx, projection)
+    return True
+
+
 def _replace_circuit_tx(tx: ManagedTransaction, projection: CircuitProjection) -> None:
     circuit_id = projection.circuit_id
     tx.run("""

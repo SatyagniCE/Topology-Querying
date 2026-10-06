@@ -130,6 +130,22 @@ def test_terminal_direction_and_ordinal(database):
     """, id=circuit_id)["n"] == 0
 
 
+def test_create_missing_circuit_preserves_existing_annotations_and_wiring(database):
+    from circuit_ingest.neo4j_store import create_circuit_if_missing
+    driver, db, circuit_id = database
+    record = _record(circuit_id)
+    assert create_circuit_if_missing(driver, db, record) is True
+    _one(driver, db, "MATCH (c:Circuit {id:$id}) SET c.notes='keep this' RETURN c", id=circuit_id)
+    changed = record.model_copy(deep=True)
+    changed.devices[0].source_instance = "must not replace Q30"
+    assert create_circuit_if_missing(driver, db, changed) is False
+    row = _one(driver, db, """
+        MATCH (c:Circuit {id:$id})-[:HAS_DEVICE]->(d:Device {ordinal:1})
+        RETURN c.notes AS notes, d.source_instance AS instance
+    """, id=circuit_id)
+    assert dict(row) == {"notes": "keep this", "instance": "Q30"}
+
+
 def test_zero_degree_port_maps_to_net(database):
     driver, db, circuit_id = database
     replace_circuit(driver, db, _record(circuit_id))
